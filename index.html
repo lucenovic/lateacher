@@ -1,0 +1,1849 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f2f2f7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="La Teacher">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<title>La Teacher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Gochi+Hand&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+:root{
+  --hand-title:"Gochi Hand","Segoe Print","Chalkboard SE","Bradley Hand","Comic Sans MS",cursive;
+  --hand:"Patrick Hand","Segoe Print","Chalkboard SE","Comic Sans MS",cursive;
+  --read:"Andika","Century Gothic","Trebuchet MS","Segoe UI",system-ui,sans-serif;
+  --ink:#1d1d1f;--soft:#666;--line:#9a9a9a;--dot:#d2d2d2;
+  --hl:#e3e3e3;--p1:#f4f4f4;--p2:#f4f4f4;--p3:#f4f4f4;--p4:#f4f4f4;
+  --tape:repeating-linear-gradient(45deg,rgba(0,0,0,.13) 0 4px,rgba(0,0,0,.05) 4px 8px);
+  --accent:#2563eb;--accent-soft:#e8efff;
+}
+body.color{--hl:#fff27a;--p1:#fff6b8;--p2:#ffdce8;--p3:#d5f3e8;--p4:#dde8ff;
+  --tape:repeating-linear-gradient(45deg,rgba(255,150,180,.55) 0 5px,rgba(255,200,215,.55) 5px 10px);}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;color:var(--ink);background:#e9e7e2}
+.app{display:grid;grid-template-columns:340px 1fr;min-height:100vh}
+/* ---------- PANEL ---------- */
+.controls{background:#fff;border-right:1px solid #dde1e8;padding:calc(18px + env(safe-area-inset-top)) 18px 40px;overflow-y:auto;max-height:100vh;position:sticky;top:0}
+.controls h1{font-size:19px;margin:0 0 2px}
+.controls .sub{color:#6b7280;font-size:13px;margin:0 0 14px}
+.box{border:1px solid #e3e6ec;border-radius:12px;padding:12px 12px 10px;margin-bottom:12px}
+.box h2{font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;margin:0 0 8px}
+label.chk{display:flex;align-items:center;gap:8px;font-size:14px;padding:4px 0;cursor:pointer}
+label.chk input{width:17px;height:17px;accent-color:var(--accent)}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.act-row input[type=number]{width:52px}
+input[type=text],input[type=number],select,textarea{font:inherit;font-size:14px;padding:6px 8px;border:1px solid #cfd4dc;border-radius:8px;width:100%;background:#fff}
+textarea{min-height:90px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
+.field{margin-bottom:8px}
+.field span{display:block;font-size:12px;color:#6b7280;margin-bottom:3px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.presets button{font-size:12px;padding:5px 9px;border-radius:999px;border:1px solid #cfd4dc;background:#f7f8fa;cursor:pointer}
+.presets button:hover{border-color:var(--accent);color:var(--accent)}
+.btn{display:block;width:100%;font:inherit;font-weight:600;font-size:15px;padding:11px;border-radius:10px;border:0;cursor:pointer;margin-top:8px}
+.btn.primary{background:var(--accent);color:#fff}
+.btn.secondary{background:var(--accent-soft);color:var(--accent)}
+.note{font-size:12px;color:#6b7280;line-height:1.4}
+details summary{cursor:pointer;font-size:14px;font-weight:600}
+.warn{font-size:12px;color:#b45309;margin-top:6px}
+/* ---------- PREVIEW ---------- */
+.preview{padding:24px;display:flex;flex-direction:column;align-items:center;gap:24px}
+.page{background:#fff;width:210mm;max-width:100%;min-height:297mm;padding:13mm 14mm 12mm 19mm;box-shadow:0 4px 22px rgba(0,0,0,.12);border-radius:3px;outline:none;position:relative}
+.page.dots{background:radial-gradient(circle,var(--dot) .9px,transparent 1.3px) 0 0/5mm 5mm,#fff}
+.page::before{content:"";position:absolute;left:10mm;top:0;bottom:0;border-left:1.5px solid var(--line);opacity:.55}
+.page.big .ws{font-size:13.5pt}
+/* ---------- WORKSHEET ---------- */
+.ws{font-family:var(--read);font-size:12pt;line-height:1.5;position:relative}
+.ws b{font-weight:700}
+.hd{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px}
+.school{font-family:var(--hand);font-size:11pt;color:var(--soft)}
+.hd h1{font-family:var(--hand-title);font-weight:400;font-size:29pt;line-height:1.08;margin:0}
+.mark{background:linear-gradient(176deg,transparent 52%,var(--hl) 52%,var(--hl) 88%,transparent 88%);padding:0 4px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.subt{font-family:var(--hand);font-size:14pt;color:var(--soft);margin-top:2px}
+.hd-r{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.doodle{width:62px;height:62px;color:var(--ink)}
+.badge{font-family:var(--hand-title);font-size:15pt;border:2px solid var(--ink);padding:0 12px;border-radius:255px 14px 225px 14px/14px 225px 14px 255px;background:var(--hl);white-space:nowrap}
+.student{display:grid;grid-template-columns:3fr 1fr 1.3fr;gap:16px;font-family:var(--hand);font-size:13pt;margin:4px 0 14px}
+.student div{border-bottom:2px dotted var(--ink);padding-top:6px}
+.sect{font-family:var(--hand-title);font-size:19pt;margin:6px 0 8px;display:flex;align-items:center;gap:8px;break-after:avoid}
+.sect svg{width:26px;height:26px}
+.sect::after{content:"";flex:1;height:10px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='10'%3E%3Cpath d='M0 5 Q6 0 12 5 T24 5' fill='none' stroke='%23999' stroke-width='1.5'/%3E%3C/svg%3E") repeat-x center/24px 10px}
+/* theory post-its */
+.notes{display:grid;grid-template-columns:1fr;gap:8mm;margin:10px 0 16px}
+.pn-grid{display:grid;grid-template-columns:.85fr 1.25fr;gap:4px 14px;align-items:start}
+.pnote{position:relative;padding:15px 13px 11px;background:var(--p1);border:1.5px solid var(--ink);border-radius:3px 3px 18px 3px;box-shadow:3px 3px 0 rgba(0,0,0,.12);break-inside:avoid;transform:rotate(-.6deg)}
+.pnote:nth-child(2n){transform:rotate(.6deg);background:var(--p2)}
+.pnote:nth-child(3n){background:var(--p3)}
+.pnote:nth-child(4n){background:var(--p4)}
+.tape{position:absolute;top:-10px;left:50%;width:70px;height:20px;margin-left:-35px;background:var(--tape);transform:rotate(-3deg);border-left:1px dashed rgba(0,0,0,.25);border-right:1px dashed rgba(0,0,0,.25)}
+.pnote h3{font-family:var(--hand-title);font-weight:400;font-size:19pt;margin:0;line-height:1.1}
+.tl{display:block;width:100%;max-width:250px;height:auto;margin:2px 0 4px}
+.tl text{font-family:var(--hand);font-size:12px;fill:var(--ink)}
+.uses{list-style:none;margin:2px 0 6px;padding:0;font-size:10.5pt;line-height:1.35}
+.uses li{display:flex;gap:6px;align-items:flex-start;margin-bottom:2px}
+.ic{width:17px;height:17px;flex:0 0 17px;margin-top:1px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.form{width:100%;border-collapse:collapse;font-size:10pt;margin:4px 0 6px;background:#fff}
+.form td{border:1.2px solid var(--ink);padding:3px 6px;line-height:1.3}
+.form td.th{font-weight:700;background:var(--hl);text-align:center}
+.form td.sg{width:22px;text-align:center;font-family:var(--hand-title);font-size:14pt;background:var(--hl);padding:0}
+.tip{display:flex;gap:6px;font-family:var(--hand);font-size:12pt;line-height:1.25;border-top:1.5px dashed var(--ink);padding-top:5px;margin-top:2px}
+.clues{margin-top:5px;font-size:9.5pt;display:flex;flex-wrap:wrap;gap:3px 4px;align-items:center}
+.clues em{font-family:var(--hand);font-style:normal;font-size:12pt;margin-right:2px}
+.clues span{border:1.2px dashed var(--ink);border-radius:20px;padding:0 7px;background:#fff}
+.ex{font-family:var(--hand);font-size:12.5pt;margin:2px 0}
+/* exercises */
+.act{margin-top:15px}
+.act-h{display:flex;align-items:center;gap:10px;break-after:avoid;break-inside:avoid;margin-bottom:2px}
+.num{flex:0 0 auto;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-family:var(--hand-title);font-size:18pt;border:2px solid var(--ink);border-radius:52% 46% 55% 45%/48% 55% 45% 52%;background:var(--hl);transform:rotate(-4deg)}
+.act-h .ins{flex:1;font-family:var(--hand);font-size:14.5pt;line-height:1.2}
+.act-h .ins .es{display:block;font-size:11.5pt;color:var(--soft)}
+.score{display:flex;align-items:center;gap:3px;font-family:var(--hand);font-size:13pt;white-space:nowrap}
+.score svg{width:20px;height:20px}
+.ws ol.items{margin:8px 0 0;padding-left:28px}
+.ws ol.items>li{margin:0 0 8px;padding-left:4px;break-inside:avoid}
+.ws ol.items>li::marker{font-family:var(--hand-title);font-size:13pt}
+.gap{display:inline-block;min-width:112px;border-bottom:1.6px solid var(--ink);height:1em;vertical-align:baseline}
+.hint{font-family:var(--hand);font-size:12.5pt;color:var(--soft)}
+.ctx{font-family:var(--hand);font-size:12.5pt}
+.opts{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:3px;font-size:11pt}
+.opts span{border:1.3px solid var(--ink);border-radius:18px;padding:0 10px 0 4px;background:#fff}
+.opts span b{display:inline-block;width:18px;height:18px;line-height:17px;text-align:center;border-radius:50%;background:var(--hl);font-family:var(--hand-title);font-weight:400;margin-right:3px}
+.circ{display:inline-block;border:1.5px dashed var(--ink);border-radius:20px;padding:0 9px;background:#fff;white-space:nowrap}
+.wline{border-bottom:1.6px dotted var(--ink);height:1.7em;margin-top:2px}
+.wline.lbl{display:flex;align-items:flex-end;gap:6px;font-family:var(--hand);font-size:13pt}
+.words{font-family:var(--hand);font-size:13.5pt;letter-spacing:.02em}
+.match{display:grid;grid-template-columns:1.35fr 1fr;gap:6px 22px;margin-top:8px}
+.match ol,.match ul{margin:0;padding-left:26px}
+.match ul{list-style:none;padding-left:0}
+.match li{margin-bottom:9px;break-inside:avoid}
+.match ol li::marker{font-family:var(--hand-title);font-size:13pt}
+.match ul li b{display:inline-block;width:22px;height:22px;line-height:20px;text-align:center;border:1.5px solid var(--ink);border-radius:50%;font-family:var(--hand-title);font-weight:400;background:var(--hl);margin-right:4px}
+.mbox{display:inline-block;width:24px;height:20px;border:1.6px solid var(--ink);border-radius:5px 3px 6px 3px;vertical-align:middle;margin:0 4px 0 6px;background:#fff}
+.match .mbox{float:right;margin:0 0 4px 8px}
+.bank{display:flex;flex-wrap:wrap;gap:6px;border:2px dashed var(--ink);border-radius:14px;padding:9px;margin:8px 0;background:#fff}
+.bank span{border:1.3px solid var(--ink);border-radius:6px;padding:0 8px;font-size:11pt;background:var(--hl)}
+table.cls,table.vt{width:100%;border-collapse:collapse;margin-top:6px;font-size:11pt;break-inside:avoid;background:#fff}
+table.cls th,table.vt th{background:var(--hl);font-family:var(--hand-title);font-weight:400;font-size:14pt;padding:3px 5px;border:1.6px solid var(--ink)}
+table.cls td{border:1.6px solid var(--ink);height:34mm;vertical-align:top;padding:5px}
+table.vt td{border:1.6px solid var(--ink);padding:4px 7px;height:9mm}
+table.vt td:first-child{font-weight:700}
+.tenses-list{font-family:var(--hand);font-size:13pt;margin-top:4px}
+.tenses-list b{border:1.3px solid var(--ink);border-radius:6px;padding:0 6px;font-weight:400;background:var(--hl)}
+/* answer key */
+.key .hd h1{font-size:24pt}
+.key .sec{margin-top:12px;break-inside:avoid}
+.key .sec h3{font-family:var(--hand-title);font-weight:400;font-size:15pt;margin:0 0 3px}
+.key ol{margin:0;padding-left:24px;columns:2;column-gap:26px;font-size:10.5pt}
+.key ol.one{columns:1}
+.key li{break-inside:avoid;margin-bottom:2px}
+.key table.cls td{height:auto}
+footer.f{margin-top:18px;font-family:var(--hand);font-size:10pt;color:var(--soft);text-align:right}
+/* responsive */
+#preview .page{zoom:var(--z,1)}
+.mbar{display:none}
+.beta{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;background:#111;color:#fff;border-radius:6px;padding:2px 6px;vertical-align:middle;margin-left:4px}
+.busy{position:fixed;inset:0;background:rgba(255,255,255,.96);z-index:50;display:none;align-items:center;justify-content:center;text-align:center;font-size:18px;font-weight:600;padding:20px}
+.busy small{display:block;font-weight:400;font-size:14px;color:#6b7280;margin-top:6px}
+.busy.on{display:flex}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#111;color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;z-index:60;display:none;max-width:90vw;text-align:center}
+.toast.on{display:block}
+.pdfmode{position:absolute;left:0;top:0;z-index:-1;width:186mm;background:#fff}
+.pdfmode .page{width:186mm;min-height:0;max-width:none;padding:0 0 0 9mm;margin:0;box-shadow:none;border-radius:0;zoom:1}
+.pdfmode .page::before{left:3mm}
+@media screen and (max-width:900px){
+  .app{grid-template-columns:1fr}
+  .controls{position:static;max-height:none;border-right:0;border-bottom:1px solid #dde1e8}
+  .preview{padding:10px 0 110px;gap:14px}
+  input[type=text],input[type=number],select,textarea{font-size:16px}
+  .mbar{display:flex;gap:8px;position:fixed;left:0;right:0;bottom:0;z-index:40;background:#fff;padding:10px 12px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -4px 16px rgba(0,0,0,.1)}
+  .mbar button{flex:1;font:inherit;font-weight:600;font-size:15px;padding:12px 6px;border-radius:10px;border:0;background:var(--accent-soft);color:var(--accent)}
+  .mbar button.primary{background:var(--accent);color:#fff;flex:1.3}
+  .controls{padding-bottom:20px}
+}
+
+/* modes */
+.subj{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;margin:4px 0 6px}
+.soon{font-size:12px;color:#9ca3af;margin:-4px 0 12px}
+.def{font-size:11pt;line-height:1.3}
+.vgrid.one{grid-template-columns:1fr}
+.kw{font-size:10.5pt;line-height:1.35;columns:2;column-gap:8mm}
+.kw div{break-inside:avoid;margin-bottom:3px}
+.kw .pic{font-size:13pt;margin-right:3px}
+.tfbox{display:inline-flex;align-items:center;justify-content:center;width:22px;height:20px;border:1.5px solid var(--ink);border-radius:5px;margin-left:6px;font-family:var(--hand-title);font-size:12pt;background:#fff}
+.cwbox.defs .cclues div{font-size:10.5pt;align-items:flex-start}
+.modes{display:flex;gap:6px;margin-bottom:12px}
+.modes button{flex:1;font:inherit;font-weight:600;font-size:14px;padding:10px 6px;border-radius:10px;border:1px solid #cfd4dc;background:#f7f8fa;cursor:pointer}
+.modes button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:70;display:none;align-items:flex-end;justify-content:center;padding:12px}
+.modal.on{display:flex}
+.mcard{background:#fff;border-radius:16px;padding:18px 18px calc(16px + env(safe-area-inset-bottom));max-width:440px;width:100%;font-size:15px;line-height:1.45}
+.mcard h3{margin:0 0 8px;font-size:18px}
+.mcard ol{padding-left:20px;margin:0 0 8px}
+.shr{display:inline-block;border:1.5px solid #2563eb;color:#2563eb;border-radius:5px;padding:0 5px;font-size:13px}
+.mbtns{display:flex;gap:8px;margin-top:12px}
+.mbtns button{flex:1;font:inherit;font-weight:600;padding:12px;border-radius:10px;border:0;background:#eef1f6}
+.mbtns button.primary{background:var(--accent);color:#fff}
+/* vocabulary */
+.pic{font-size:22pt;line-height:1;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+body:not(.color) .pic{filter:grayscale(1) contrast(1.15)}
+.pic.nm{font-family:var(--hand-title);font-size:20pt;filter:none;min-width:34px;display:inline-block;text-align:center}
+.es-w{font-family:var(--hand);font-size:13pt;color:var(--soft);margin-left:4px}
+.clue{display:inline-flex;align-items:center;gap:4px;min-width:30mm}
+.vgrid{display:grid;grid-template-columns:1fr 1fr;column-gap:10mm}
+.vgrid>li{break-inside:avoid}
+.vrow{display:flex !important;align-items:center;gap:8px;flex-wrap:wrap;min-height:13mm}
+ol.vgrid{list-style:none;padding-left:0;counter-reset:v}
+ol.vgrid>li{counter-increment:v;position:relative;padding-left:24px !important}
+ol.vgrid>li::before{content:counter(v)".";position:absolute;left:0;font-family:var(--hand-title);font-size:13pt}
+.boxes{display:inline-flex;gap:2px;flex-wrap:wrap}
+.lb{display:inline-flex;align-items:center;justify-content:center;width:6.5mm;height:7.5mm;border:1.4px solid var(--ink);border-radius:3px;background:#fff;font-family:var(--read);font-size:13pt}
+.lb.sp{border:0;width:4mm;background:transparent}
+.lb.pun{border:0;width:3mm;background:transparent}
+.missing{font-family:var(--read);font-size:15pt;letter-spacing:.12em}
+.ml{display:inline-block;width:5mm;border-bottom:1.6px solid var(--ink);margin:0 1px;height:1em;vertical-align:baseline}
+.scr{display:block;font-family:var(--hand);font-size:15pt;letter-spacing:.06em}
+.wline.sm{display:block;width:38mm;height:1.4em}
+.vmatch .clue{min-width:0}
+.vmatch ol li{min-height:10mm}
+.wsbox{display:flex;gap:8mm;align-items:flex-start;margin-top:8px;break-inside:avoid;flex-wrap:wrap}
+table.wsg{border-collapse:collapse;border:2px solid var(--ink);background:#fff}
+table.wsg td{width:8mm;height:8mm;text-align:center;font-family:var(--read);font-weight:700;font-size:13pt;border:1px solid #cfcfcf;padding:0}
+table.wsg td.on{background:var(--hl);outline:1.5px solid var(--ink)}
+.wlist{flex:1;min-width:45mm;display:flex;flex-direction:column;gap:4px}
+.wlist span{display:flex;align-items:center;gap:6px;font-size:12pt}
+.wlist .pic{font-size:16pt}
+.cwbox{display:flex;gap:7mm;align-items:flex-start;margin-top:8px;break-inside:avoid;flex-wrap:wrap}
+table.cwg{border-collapse:collapse}
+table.cwg td{width:var(--cell);height:var(--cell);border:1.5px solid var(--ink);background:#fff;position:relative;text-align:center;vertical-align:middle;font-family:var(--read);font-weight:700;font-size:12pt;padding:0}
+table.cwg td.x{border:0;background:transparent}
+table.cwg sup{position:absolute;top:1px;left:2px;font-size:7pt;font-weight:400;line-height:1}
+.cclues-wrap{flex:1;min-width:55mm;display:flex;flex-direction:column;gap:8px}
+.cclues h4{font-family:var(--hand-title);font-weight:400;font-size:15pt;margin:0 0 3px}
+.cclues div{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.cclues .pic{font-size:17pt}
+.wbank{display:grid;grid-template-columns:repeat(auto-fill,minmax(32mm,1fr));gap:6px;margin:8px 0 14px}
+.wcard{border:1.5px solid var(--ink);border-radius:255px 12px 225px 12px/12px 225px 12px 255px;background:#fff;padding:5px 6px;display:flex;flex-direction:column;align-items:center;text-align:center;break-inside:avoid}
+.wcard b{font-size:11.5pt}
+.wcard .es-w{margin:0;font-size:11pt}
+.numtab{display:grid;grid-template-columns:repeat(auto-fill,minmax(38mm,1fr));gap:2px 10px;font-size:11pt;margin:4px 0}
+.numtab b{display:inline-block;min-width:9mm;font-family:var(--hand-title);font-weight:400;font-size:14pt}
+.pnote.nb{transform:none}
+
+
+/* ================= Apple-style app chrome (does not affect worksheets) ================= */
+:root{--sys:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --blue:#007aff;--green:#34c759;--bg:#f2f2f7;--card:#fff;--sep:rgba(60,60,67,.18);--label2:rgba(60,60,67,.6);--fill:rgba(118,118,128,.12);--accent:#007aff;--accent-soft:rgba(0,122,255,.1)}
+body{background:var(--bg);font-family:var(--sys);-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+.controls{background:var(--bg);border-right:0;font-family:var(--sys);padding-left:16px;padding-right:16px}
+.controls h1{font-size:32px;font-weight:700;letter-spacing:-.02em;margin:6px 4px 2px}
+.controls h1 .beta{background:var(--fill);color:var(--label2);font-size:11px;letter-spacing:.04em;border-radius:6px;padding:3px 7px;vertical-align:6px;font-weight:600}
+.controls .sub{color:var(--label2);font-size:15px;margin:0 4px 18px}
+.subj{color:var(--label2);font-size:13px;font-weight:400;text-transform:uppercase;letter-spacing:0;margin:0 16px 6px}
+.soon{color:var(--label2);font-size:13px;margin:8px 16px 22px;line-height:1.35}
+/* segmented control */
+.modes{background:var(--fill);border-radius:9px;padding:2px;gap:0;margin:0 0 0}
+.modes button{border:0;background:transparent;border-radius:7px;font-family:var(--sys);font-size:13px;font-weight:500;padding:7px 4px;color:#000;transition:background .2s,box-shadow .2s}
+.modes button.on{background:#fff;color:#000;font-weight:600;box-shadow:0 3px 8px rgba(0,0,0,.12),0 3px 1px rgba(0,0,0,.04)}
+/* grouped inset lists */
+.box{background:var(--card);border:0;border-radius:12px;padding:0 16px;margin:0 0 26px;position:relative;margin-top:34px}
+.box h2{position:absolute;top:-24px;left:16px;margin:0;font-size:13px;font-weight:400;color:var(--label2);text-transform:uppercase;letter-spacing:0}
+.box h2 span{text-transform:none}
+.box>*:first-child:not(h2), .box h2+*{margin-top:0}
+.box>p.note,.box .note{color:var(--label2)}
+.box>p.note{padding:0 0 12px;margin:0 !important;font-size:13px}
+.box>select,.box>.field,.box>.grid2,.box>details,.box>.presets{margin:11px 0}
+label.chk{min-height:44px;padding:6px 0;font-size:16px;gap:10px;border-top:.5px solid var(--sep);line-height:1.25}
+.box>label.chk:first-of-type,.box>div>label.chk:first-child,#acts>.act-row:first-child label.chk,#vacts>.act-row:first-child label.chk,#sacts>.act-row:first-child label.chk{border-top:0}
+#acts .act-row,#vacts .act-row,#sacts .act-row{border-top:.5px solid var(--sep)}
+#acts .act-row:first-child,#vacts .act-row:first-child,#sacts .act-row:first-child{border-top:0}
+.act-row label.chk{border-top:0;flex:1}
+label.chk .note{font-size:13px;color:var(--label2)}
+label.chk .t{display:flex;flex-direction:column;gap:1px;flex:1}
+label.chk .t .note{font-size:13px}
+/* iOS switch */
+label.chk input[type=checkbox]{-webkit-appearance:none;appearance:none;order:3;margin:0 0 0 auto;flex:0 0 51px;width:51px;height:31px;border-radius:31px;background:#e9e9ea;position:relative;cursor:pointer;transition:background .25s;accent-color:auto}
+label.chk input[type=checkbox]::before{content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.15),0 3px 1px rgba(0,0,0,.06);transition:transform .25s}
+label.chk input[type=checkbox]:checked{background:var(--green)}
+label.chk input[type=checkbox]:checked::before{transform:translateX(20px)}
+/* fields */
+input[type=text],input[type=number],select,textarea{font-family:var(--sys);font-size:16px;border:0;border-radius:10px;background:var(--bg);padding:10px 12px;color:#000}
+select{-webkit-appearance:none;appearance:none;padding-right:34px;background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238e8e93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 13px center}
+.act-row input[type=number]{width:54px;text-align:center;padding:6px 4px;font-weight:600;color:var(--blue);background:var(--fill)}
+.field span{color:var(--label2);font-size:13px;margin:0 0 5px 2px}
+.box .grid2 .field{margin-bottom:0}
+.box>.field:first-of-type{margin-top:14px}
+/* presets as capsules */
+.presets{padding:12px 0;gap:8px}
+.presets button{font-family:var(--sys);font-size:14px;font-weight:500;border:0;background:var(--accent-soft);color:var(--blue);border-radius:999px;padding:7px 13px}
+.presets button:active{opacity:.6}
+/* buttons */
+.btn{font-family:var(--sys);border-radius:14px;font-size:17px;font-weight:600;padding:15px;letter-spacing:-.01em}
+.btn.primary{background:var(--blue);box-shadow:none}
+.btn.secondary{background:var(--accent-soft);color:var(--blue)}
+.btn:active{opacity:.75}
+#newVersion{border-radius:10px !important;font-size:15px !important}
+details summary{font-size:16px;font-weight:400;padding:12px 0;list-style:none;color:var(--blue)}
+details summary::-webkit-details-marker{display:none}
+.warn{color:#ff9500;font-size:13px;padding:0 0 10px;margin:0}
+.warn:empty{display:none}
+.controls>p.note{color:var(--label2);font-size:13px;margin:10px 16px 0}
+/* preview */
+.preview{background:var(--bg)}
+.page{border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06),0 10px 30px rgba(0,0,0,.08)}
+/* tab bar */
+.mbar button svg{display:block;margin:0 auto 2px;width:25px;height:25px}
+/* sheet / toast */
+.modal{background:rgba(0,0,0,.3);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.mcard{border-radius:14px;font-family:var(--sys);font-size:15px;box-shadow:0 10px 40px rgba(0,0,0,.2)}
+.mcard h3{font-size:20px;font-weight:700;letter-spacing:-.02em}
+.mcard label.chk{border-top:.5px solid var(--sep);margin-top:8px}
+.mbtns button{font-family:var(--sys);font-size:17px;border-radius:12px;padding:14px;background:var(--fill);color:var(--blue)}
+.mbtns button.primary{background:var(--blue);color:#fff}
+.shr{border-color:var(--blue);color:var(--blue)}
+.toast{background:rgba(30,30,30,.85);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-radius:14px;font-family:var(--sys);font-weight:500}
+@media screen and (max-width:900px){
+  .controls{padding:calc(14px + env(safe-area-inset-top)) 16px 10px}
+  .mbar{background:rgba(249,249,249,.82);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:none;border-top:.5px solid rgba(0,0,0,.2);padding:6px 8px calc(4px + env(safe-area-inset-bottom));gap:0}
+  .mbar button{background:transparent !important;color:#8e8e93 !important;font-family:var(--sys);font-size:10px;font-weight:500;padding:4px 0;border-radius:0;flex:1 !important;letter-spacing:.01em}
+  .mbar button.primary{color:var(--blue) !important}
+  .mbar button:active{opacity:.5}
+  .preview{padding:14px 0 100px}
+}
+@media (min-width:901px){ .controls{border-right:.5px solid var(--sep)} }
+
+/* print */
+@page{size:A4;margin:12mm 12mm 12mm 12mm}
+@media print{
+  body{background:#fff}
+  .app{display:block}
+  .controls{display:none}
+  .preview{padding:0;display:block}
+  .page{box-shadow:none;border-radius:0;width:auto;min-height:0;padding:0 0 0 9mm;margin:0;max-width:none}
+  .page::before{left:3mm}
+  .page+.page{break-before:page}
+  #preview .page{zoom:1 !important}
+  .modal,.toast,.busy,.mbar{display:none !important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+
+</head>
+<body>
+<div class="app">
+<aside class="controls">
+  <h1>La Teacher <span class="beta">BETA</span></h1>
+  <p class="sub">Fichas para imprimir, listas en segundos.</p>
+
+  <div class="subj">Inglés y Science</div>
+  <div class="modes" id="modes"><button data-mode="gram" class="on">Gramática</button><button data-mode="vocab">Vocabulario</button><button data-mode="sci">Science</button></div>
+  <p class="soon">Próximamente: Matemáticas, Lengua, Français y Cambridge B1.</p>
+  <input type="hidden" id="mode" value="gram">
+
+  <div id="vocabPanel" style="display:none">
+  <div class="box">
+    <h2>Curso</h2>
+    <select id="vLevel"><option value="1">1.º de primaria</option><option value="2">2.º de primaria</option><option value="3">3.º de primaria</option><option value="4">4.º de primaria</option><option value="5" selected>5.º de primaria</option><option value="6">6.º de primaria</option></select>
+    <p class="note" style="margin:6px 0 0">Cambia los temas que se muestran, el tamaño de la sopa de letras y cuántas letras faltan.</p>
+  </div>
+  <div class="box">
+    <h2>Temas de vocabulario</h2>
+    <div id="vtopics"></div>
+    <label class="chk"><input type="checkbox" id="vAll"> Ver temas de otros cursos</label>
+  </div>
+  <div class="box">
+    <h2>Apoyo para la palabra</h2>
+    <select id="vSupport"><option value="both" selected>Dibujo + español</option><option value="pic">Solo dibujo</option><option value="es">Solo español</option></select>
+    <p class="note" style="margin:6px 0 0">Si una palabra no tiene dibujo, sale en español.</p>
+  </div>
+  <div class="box">
+    <h2>Actividades <span style="text-transform:none;font-weight:400">(nº de palabras)</span></h2>
+    <div id="vacts"></div>
+    <div class="warn" id="vWarn"></div>
+  </div>
+  </div>
+
+  <div id="sciPanel" style="display:none">
+  <div class="box">
+    <h2>Curso</h2>
+    <select id="sLevel"><option value="1">1.º de primaria</option><option value="2">2.º de primaria</option><option value="3">3.º de primaria</option><option value="4">4.º de primaria</option><option value="5" selected>5.º de primaria</option><option value="6">6.º de primaria</option></select>
+  </div>
+  <div class="box">
+    <h2>Unidades</h2>
+    <div id="stopics"></div>
+    <label class="chk"><input type="checkbox" id="sAll"> Ver unidades de otros cursos</label>
+  </div>
+  <div class="box">
+    <h2>Pistas</h2>
+    <select id="sSupport"><option value="def" selected>Definición en inglés</option><option value="both">Dibujo + español</option><option value="es">Solo español</option></select>
+  </div>
+  <div class="box">
+    <h2>Actividades <span style="text-transform:none;font-weight:400">(nº de ítems)</span></h2>
+    <div id="sacts"></div>
+    <div class="warn" id="sWarn"></div>
+  </div>
+  </div>
+
+  <div id="gramPanel">
+  <div class="box">
+    <h2>Combinaciones rápidas</h2>
+    <div class="presets" id="presets"></div>
+  </div>
+
+  <div class="box">
+    <h2>Tiempos verbales</h2>
+    <div id="tenses"></div>
+  </div>
+
+  <div class="box">
+    <h2>Otros temas</h2>
+    <div id="topics"></div>
+  </div>
+
+  <div class="box">
+    <h2>Actividades <span style="text-transform:none;font-weight:400">(nº de ítems)</span></h2>
+    <div id="acts"></div>
+    <div class="warn" id="actWarn"></div>
+  </div>
+  </div><!-- /gramPanel -->
+
+  <div class="box">
+    <h2>Ficha</h2>
+    <div class="field"><span>Título</span><input type="text" id="title"></div>
+    <div class="field"><span>Subtítulo</span><input type="text" id="subtitle" value="Grammar practice"></div>
+    <div class="field"><span>Centro / profesor (opcional)</span><input type="text" id="school" placeholder="IES … · Mr / Ms …"></div>
+    <div class="grid2">
+      <div class="field"><span>Versiones</span>
+        <select id="versions"><option value="1">1</option><option value="2">2 (A, B)</option><option value="3">3 (A–C)</option><option value="4">4 (A–D)</option></select></div>
+      <div class="field"><span>Tinta</span>
+        <select id="theme"><option value="">Blanco y negro</option><option value="color">Color pastel</option></select></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><span>Instrucciones</span>
+        <select id="lang"><option value="en">Inglés</option><option value="enes" selected>Inglés + español</option></select></div>
+      <div class="field"><span>Tamaño letra</span>
+        <select id="size"><option value="">Normal</option><option value="big">Grande</option></select></div>
+    </div>
+    <label class="chk"><input type="checkbox" id="optGrammar" checked> Teoría al principio</label>
+    <label class="chk"><input type="checkbox" id="optDots" checked> Fondo de libreta (puntos)</label>
+    <label class="chk"><input type="checkbox" id="optStudent" checked> Nombre / clase / fecha</label>
+    <label class="chk"><input type="checkbox" id="optScore" checked> Puntuación por ejercicio</label>
+    <label class="chk"><input type="checkbox" id="optKey" checked> Solucionario (página aparte)</label>
+    <label class="chk"><input type="checkbox" id="optEdit"> Editar el texto tocando la ficha</label>
+  </div>
+
+  <div class="box">
+    <h2>Versión</h2>
+    <div class="grid2">
+      <div class="field"><span>Código</span><input type="number" id="seed"></div>
+      <div class="field"><span>&nbsp;</span><button class="btn secondary" style="margin:0;padding:7px" id="newVersion">Nueva versión</button></div>
+    </div>
+    <p class="note">El mismo código + mismas opciones = la misma ficha. Apúntalo si quieres repetirla.</p>
+  </div>
+
+  <div class="box" id="customBox">
+    <details>
+      <summary>Añadir mis propias frases…</summary>
+      <p class="note">Una por línea: <b>tiempo | sujeto | persona | verbo | resto | pronombre</b><br>
+      Tiempos: ps, pc, pas, pac, pp, ppc, will, going · Persona: 1 = I, 2 = you/we/they/plural, 3 = he/she/it<br>
+      Verbo irregular nuevo: <code>fight/fought/fought</code> · Pronombre solo si el sujeto es un nombre.</p>
+      <textarea id="custom" placeholder="pc | My cat | 3 | sleep | on the sofa right now | it&#10;pas | Lucía | 3 | fight/fought/fought | with her brother yesterday | she"></textarea>
+      <label class="chk"><input type="checkbox" id="onlyCustom"> Usar solo mis frases</label>
+      <div class="warn" id="customWarn"></div>
+    </details>
+  </div>
+
+  <button class="btn primary" id="print">Guardar PDF</button>
+    <p class="note" style="margin-top:8px">Si activas «Editar el texto», puedes tocar cualquier frase de la ficha para cambiarla antes de descargar (los cambios se pierden si tocas otra opción). La app recuerda tus últimas opciones.</p>
+</aside>
+
+<main class="preview" id="preview"></main>
+</div>
+<div class="mbar"><button id="mOpts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>Opciones</button><button id="mView"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Ver ficha</button><button class="primary" id="mPdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/></svg>Guardar PDF</button></div>
+<div class="busy" id="busy"><div>⏳ Creando el PDF…<small>Puede tardar unos segundos</small></div></div>
+<div class="toast" id="toast"></div>
+<div class="modal" id="pdfHelp"><div class="mcard">
+  <h3>Guardar en PDF</h3>
+  <ol>
+    <li>Se abrirá la pantalla <b>Imprimir</b>.</li>
+    <li>Pulsa el botón <b>Compartir</b> <span class="shr">⬆︎</span> (arriba).</li>
+    <li>Elige <b>Guardar en Archivos</b>, o envíalo por WhatsApp o Mail.</li>
+  </ol>
+  <label class="chk"><input type="checkbox" id="pdfNoMore"> No volver a mostrar</label>
+  <div class="mbtns"><button id="pdfCancel">Cancelar</button><button class="primary" id="pdfGo">Continuar</button></div>
+</div></div>
+
+<script>
+/* =========================================================
+   DATA
+   ========================================================= */
+const TENSES = {
+  ps:  {en:'Present simple', es:'Presente simple'},
+  pc:  {en:'Present continuous', es:'Presente continuo'},
+  pas: {en:'Past simple', es:'Pasado simple'},
+  pac: {en:'Past continuous', es:'Pasado continuo'},
+  pp:  {en:'Present perfect', es:'Presente perfecto'},
+  ppc: {en:'Present perfect continuous', es:'Presente perfecto continuo'},
+  wil: {en:'Future: will', es:'Futuro con will'},
+  gon: {en:'Future: going to', es:'Futuro con going to'}
+};
+const TALL = Object.keys(TENSES);
+
+const ICONS = {
+  loop:'<path d="M4 9a6 6 0 0 1 10-3l2 2M16 4v4h-4M16 11a6 6 0 0 1-10 3l-2-2M4 16v-4h4"/>',
+  cal:'<rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2v4M13 2v4"/>',
+  globe:'<circle cx="10" cy="10" r="7"/><path d="M3 10h14M10 3c3 3 3 11 0 14M10 3c-3 3-3 11 0 14"/>',
+  eye:'<path d="M2 10s3-5 8-5 8 5 8 5-3 5-8 5-8-5-8-5z"/><circle cx="10" cy="10" r="2.2"/>',
+  clock:'<circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/>',
+  check:'<path d="M4 10l4 4 8-8"/>',
+  wave:'<path d="M2 10c2-4 4-4 6 0s4 4 6 0 3-3 4-1"/>',
+  bolt:'<path d="M11 2L4 11h5l-1 7 7-9h-5z"/>',
+  star:'<path d="M10 2.5l2.3 4.8 5.2.7-3.8 3.6.9 5.2-4.6-2.5-4.6 2.5.9-5.2L2.5 8l5.2-.7z"/>',
+  arrow:'<path d="M3 10h13M12 6l4 4-4 4"/>',
+  bulb:'<path d="M7 14h6M8 17h4M10 3a5 5 0 0 0-3 9c.6.5 1 1.2 1 2h4c0-.8.4-1.5 1-2a5 5 0 0 0-3-9z"/>',
+  heart:'<path d="M10 17s-7-4.4-7-9a3.8 3.8 0 0 1 7-2 3.8 3.8 0 0 1 7 2c0 4.6-7 9-7 9z"/>',
+  map:'<path d="M3 5l4-2 6 2 4-2v12l-4 2-6-2-4 2zM7 3v12M13 5v12"/>',
+  pencil:'<path d="M13 3l4 4-9 9H4v-4zM11 5l4 4"/>',
+  book:'<path d="M3 4h5a2 2 0 0 1 2 2v11a2 2 0 0 0-2-2H3zM17 4h-5a2 2 0 0 0-2 2v11a2 2 0 0 1 2-2h5z"/>'
+};
+const icon = (n,cls='ic') => `<svg class="${cls}" width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICONS[n]}</svg>`;
+
+/* Theory in simple English. rows: [sign, cell, cell, ...] */
+const GRAMMAR = {
+  ps:{uses:[['loop','<b>habits</b>: things we do often'],['cal','<b>routines</b>: every day, every week'],['globe','<b>facts</b>: things that are always true']],
+      rows:[['+','I / You / We / They <b>play</b>','He / She / It <b>play<u>s</u></b>'],['−','I <b>don\'t play</b>','She <b>doesn\'t play</b>'],['?','<b>Do</b> you <b>play</b>?','<b>Does</b> she <b>play</b>?']],
+      ex:'I play football every Saturday.',
+      tip:'He, she, it → add <b>-s</b>! play → plays · watch → watch<b>es</b> · study → stud<b>ies</b>',
+      clues:['every day','usually','always','on Mondays','twice a week']},
+  pc:{uses:[['eye','actions happening <b>now</b>'],['clock','things happening <b>around now</b>: today, this week']],
+      rows:[['+','I <b>am</b> read<b>ing</b>','She <b>is</b> read<b>ing</b>','They <b>are</b> read<b>ing</b>'],['−','I<b>\'m not</b> read<b>ing</b>','She <b>isn\'t</b> read<b>ing</b>','They <b>aren\'t</b> read<b>ing</b>'],['?','<b>Am</b> I read<b>ing</b>?','<b>Is</b> she read<b>ing</b>?','<b>Are</b> they read<b>ing</b>?']],
+      ex:'Look! The dog is running in the park.',
+      tip:'Spelling: make → mak<b>ing</b> · swim → swi<b>mm</b>ing · lie → l<b>y</b>ing',
+      clues:['now','right now','at the moment','Look!','Listen!']},
+  pas:{uses:[['check','<b>finished</b> actions in the past'],['cal','we often say <b>when</b>: yesterday, last week']],
+      rows:[['+','Regular: play → play<b>ed</b>','Irregular: go → <b>went</b>'],['−','I <b>didn\'t play</b>','She <b>didn\'t go</b>'],['?','<b>Did</b> you <b>play</b>?','<b>Did</b> she <b>go</b>?']],
+      ex:'We went to the beach last summer.',
+      tip:'After <b>did / didn\'t</b> use the normal verb: <s>didn\'t went</s> → didn\'t <b>go</b>',
+      clues:['yesterday','last week','two days ago','in 2020','last summer']},
+  pac:{uses:[['wave','an action <b>in progress</b> at a moment in the past'],['bolt','often <b>interrupted</b> by a short action (past simple)']],
+      rows:[['+','I / He / She / It <b>was</b> play<b>ing</b>','You / We / They <b>were</b> play<b>ing</b>'],['−','She <b>wasn\'t</b> play<b>ing</b>','They <b>weren\'t</b> play<b>ing</b>'],['?','<b>Was</b> she play<b>ing</b>?','<b>Were</b> they play<b>ing</b>?']],
+      ex:'I was reading when the phone rang.',
+      tip:'<b>while</b> + past continuous · <b>when</b> + past simple',
+      clues:['at 8 pm yesterday','while','when','at that moment']},
+  pp:{uses:[['star','<b>experiences</b>: Have you ever…?'],['arrow','from the <b>past</b> until <b>now</b>']],
+      rows:[['+','I / You / We / They <b>have</b> visit<b>ed</b>','He / She / It <b>has</b> seen'],['−','I <b>haven\'t</b> visit<b>ed</b>','She <b>hasn\'t</b> seen'],['?','<b>Have</b> you ever visit<b>ed</b>…?','<b>Has</b> she seen…?']],
+      ex:'I have visited London three times.',
+      tip:'have / has + <b>past participle</b>: go → gone · see → seen · eat → eaten',
+      clues:['ever','never','already','yet','just','since','for']},
+  ppc:{uses:[['loop','started in the past and is <b>still happening</b>'],['clock','we say <b>how long</b>: for two hours, since 9 o\'clock']],
+      rows:[['+','I / You / We / They <b>have been</b> play<b>ing</b>','He / She / It <b>has been</b> play<b>ing</b>'],['−','I <b>haven\'t been</b> play<b>ing</b>','She <b>hasn\'t been</b> play<b>ing</b>'],['?','<b>Have</b> you <b>been</b> play<b>ing</b>?','<b>Has</b> she <b>been</b> play<b>ing</b>?']],
+      ex:'It has been raining since this morning.',
+      tip:'<b>for</b> + a period (for two hours) · <b>since</b> + a starting point (since Monday)',
+      clues:['for','since','all day','all morning','How long…?']},
+  wil:{uses:[['bulb','<b>predictions</b>: what we think will happen'],['heart','<b>promises</b> and <b>offers</b>: I\'ll help you!'],['bolt','<b>quick decisions</b>: I\'ll have the pizza!']],
+      rows:[['+','I / You / He / She / It / We / They <b>will</b> play'],['−','She <b>won\'t</b> play &nbsp;(won\'t = will not)'],['?','<b>Will</b> you play?']],
+      ex:'I think robots will do our homework one day.',
+      tip:'<b>will</b> is the same for everybody: <s>she will plays</s> → she will <b>play</b>',
+      clues:['in the future','I think','probably','one day','tomorrow']},
+  gon:{uses:[['map','<b>plans</b>: things we have decided to do'],['eye','predictions we can <b>see</b>: Look at those clouds!']],
+      rows:[['+','I <b>am going to</b> play','She <b>is going to</b> play','They <b>are going to</b> play'],['−','I<b>\'m not going to</b>','She <b>isn\'t going to</b>','They <b>aren\'t going to</b>'],['?','<b>Am</b> I <b>going to</b>…?','<b>Is</b> she <b>going to</b>…?','<b>Are</b> they <b>going to</b>…?']],
+      ex:'Look at those clouds! It\'s going to rain.',
+      tip:'am / is / are + <b>going to</b> + verb',
+      clues:['next weekend','tonight','tomorrow','Look!']}
+};
+
+/* little timelines: past ——— NOW ——— future */
+function timeline(t){
+  const X=(x,s=6)=>`<path d="M${x-s} ${30-s}L${x+s} ${30+s}M${x+s} ${30-s}L${x-s} ${30+s}" stroke-width="2.6"/>`;
+  const wave=(a,b)=>{let d=`M${a} 30`;for(let x=a;x<b;x+=10)d+=` q5 -7 10 0`;return `<path d="${d}" stroke-width="2.6"/>`;};
+  const arc=(a,b,dash)=>`<path d="M${a} 28 Q${(a+b)/2} 4 ${b} 26" stroke-width="2" ${dash?'stroke-dasharray="4 4"':''}/><path d="M${b-9} 22 L${b} 26 L${b-3} 17" stroke-width="2"/>`;
+  const lbl=(x,y,s)=>`<text x="${x}" y="${y}" text-anchor="middle">${s}</text>`;
+  const m={
+    ps:[36,62,88,114,146,172,198].map(x=>X(x,4)).join(''),
+    pc:wave(112,152),
+    pas:X(60)+lbl(60,48,'finished'),
+    pac:wave(30,100)+X(72,5)+lbl(72,12,'when…'),
+    pp:arc(46,128)+`<circle cx="46" cy="30" r="3.5" fill="currentColor"/>`,
+    ppc:wave(46,126)+`<path d="M122 22 L130 30 L122 38" stroke-width="2.4"/>`,
+    wil:arc(132,184,true)+X(190)+lbl(160,10,'I think…'),
+    gon:arc(132,184,false)+X(190)+lbl(160,10,'plan!')
+  }[t];
+  return `<svg class="tl" viewBox="0 0 240 54" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 30H228M220 25l8 5-8 5" stroke-width="1.6"/><path d="M130 21v18" stroke-width="2"/>
+    <g stroke="none">${lbl(130,52,'NOW')}<text x="10" y="52">past</text><text x="230" y="52" text-anchor="end">future</text></g>
+    ${m}</svg>`.replace(/<text/g,'<text stroke="none" fill="#1d1d1f" font-size="12" font-family="Patrick Hand, Comic Sans MS, cursive"');
+}
+
+function theoryCard(t){
+  const g=GRAMMAR[t]||XGRAMMAR[t], cols=Math.max(...g.rows.map(r=>r.length-1));
+  const rows=g.rows.map(r=>`<tr><td class="sg">${r[0]}</td>${r.slice(1).map((c,i,a)=>`<td${i===a.length-1&&a.length<cols?` colspan="${cols-a.length+1}"`:''}>${c}</td>`).join('')}</tr>`).join('');
+  return `<div class="pnote"><div class="tape"></div><div class="pn-grid"><div><h3>${NAMES[t].en}</h3>${GRAMMAR[t]?timeline(t):xVisual(t)}
+    <ul class="uses">${g.uses.map(u=>`<li>${icon(u[0])}<span>${u[1]}</span></li>`).join('')}</ul></div><div>
+    <table class="form">${g.head?`<tr>${g.head.map((h,i)=>`<td class="${i?'th':'sg'}">${h}</td>`).join('')}</tr>`:''}${rows}</table>
+    <div class="ex">✎ ${g.ex}</div>
+    <div class="tip">${icon('bulb')}<span><b>Tip!</b> ${g.tip}</span></div>
+    <div class="clues"><em>Clue words:</em>${g.clues.map(c=>`<span>${c}</span>`).join('')}</div></div></div></div>`;
+}
+const DOODLE = `<svg class="doodle" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M30 8l5.5 11.5 12.5 1.7-9 8.7 2.2 12.4L30 36.4 18.8 42.3 21 29.9l-9-8.7 12.5-1.7z"/><path d="M50 42c3 1 6 4 6 8M8 46c4-1 7 1 9 4M52 10l4-4M56 16h5M46 6V2"/></svg>`;
+
+/* [tense, subject, person(1=I,2=you/we/they,3=he/she/it), verb, rest, pronoun?, context?] */
+const BANK_RAW = [
+ // PRESENT SIMPLE
+ ['ps','She',3,'go','to school by bus every day'],
+ ['ps','My brother',3,'play','football on Saturdays','he'],
+ ['ps','We',2,'have','lunch at two o\'clock every day'],
+ ['ps','I',1,'drink','coffee every morning'],
+ ['ps','Tom',3,'watch','TV in the evenings','he'],
+ ['ps','My parents',2,'visit','my grandmother every Sunday','they'],
+ ['ps','It',3,'rain','a lot in November'],
+ ['ps','The shop',3,'open','at nine o\'clock every morning','it'],
+ ['ps','You',2,'study','English twice a week'],
+ ['ps','Lucy',3,'brush','her teeth after every meal','she'],
+ ['ps','The children',2,'walk','to school every morning','they'],
+ ['ps','My dad',3,'cook','dinner on Fridays','he'],
+ ['ps','He',3,'do','his homework after school every day'],
+ ['ps','They',2,'go','swimming every summer'],
+ ['ps','Our teacher',3,'give','us homework every Monday','she'],
+ // PRESENT CONTINUOUS
+ ['pc','She',3,'read','a book right now'],
+ ['pc','The boys',2,'play','basketball in the park at the moment','they'],
+ ['pc','I',1,'write','an email now'],
+ ['pc','We',2,'watch','a film at the moment'],
+ ['pc','My mum',3,'make','a cake right now','she'],
+ ['pc','It',3,'rain','outside now','', 'Take an umbrella!'],
+ ['pc','You',2,'sit','in my chair now'],
+ ['pc','Peter',3,'swim','in the pool at the moment','he'],
+ ['pc','They',2,'study','for their exams this week'],
+ ['pc','The baby',3,'sleep','in her room right now','she','Shh!'],
+ ['pc','He',3,'wear','a blue jacket today'],
+ ['pc','My friends',2,'wait','for me outside right now','they'],
+ ['pc','Anna',3,'talk','on the phone at the moment','she'],
+ ['pc','I',1,'learn','to drive this month'],
+ ['pc','The dog',3,'bark','at the postman','it','Listen!'],
+ // PAST SIMPLE
+ ['pas','She',3,'visit','her aunt last weekend'],
+ ['pas','We',2,'go','to the beach yesterday'],
+ ['pas','I',1,'buy','a new phone two days ago'],
+ ['pas','My brother',3,'break','his arm last summer','he'],
+ ['pas','They',2,'watch','a horror film last night'],
+ ['pas','Sam',3,'eat','pizza for dinner yesterday','he'],
+ ['pas','You',2,'win','the race last Friday'],
+ ['pas','The train',3,'arrive','an hour ago','it'],
+ ['pas','My grandparents',2,'travel','to Italy in 2019','they'],
+ ['pas','Emma',3,'study','French at school last year','she'],
+ ['pas','He',3,'write','a letter to his friend last week'],
+ ['pas','I',1,'lose','my keys yesterday morning'],
+ ['pas','The children',2,'play','in the garden yesterday afternoon','they'],
+ ['pas','We',2,'meet','our new teacher last Monday'],
+ ['pas','My sister',3,'see','a famous actor in the street last month','she'],
+ // PAST CONTINUOUS
+ ['pac','I',1,'read','a book at eight o\'clock last night'],
+ ['pac','They',2,'play','tennis at 5 pm yesterday'],
+ ['pac','She',3,'cook','dinner when the phone rang'],
+ ['pac','We',2,'walk','home when it started to rain'],
+ ['pac','My dad',3,'drive','to work at this time yesterday','he'],
+ ['pac','The kids',2,'watch','cartoons when I arrived','they'],
+ ['pac','He',3,'sleep','when the alarm went off'],
+ ['pac','You',2,'talk','on the phone when I called'],
+ ['pac','Laura',3,'study','in the library at six o\'clock yesterday','she'],
+ ['pac','It',3,'snow','when we left the house'],
+ ['pac','The students',2,'do','an exam at ten o\'clock this morning','they'],
+ ['pac','I',1,'have','a shower when you knocked on the door'],
+ ['pac','My friends',2,'wait','for the bus when the accident happened','they'],
+ ['pac','Mark',3,'ride','his bike when he fell off','he'],
+ ['pac','We',2,'have','dinner at nine o\'clock last night'],
+ // PRESENT PERFECT
+ ['pp','I',1,'visit','London three times'],
+ ['pp','She',3,'live','in Madrid since 2018'],
+ ['pp','We',2,'know','each other for ten years'],
+ ['pp','My brother',3,'break','his leg twice','he'],
+ ['pp','They',2,'see','that film twice'],
+ ['pp','He',3,'work','here since January'],
+ ['pp','You',2,'eat','sushi before'],
+ ['pp','The Smiths',2,'have','that car for five years','they'],
+ ['pp','Maria',3,'read','this book four times','she'],
+ ['pp','My parents',2,'travel','to five countries this year','they'],
+ ['pp','It',3,'rain','a lot this month'],
+ ['pp','Our team',3,'win','three matches this season','it'],
+ ['pp','Paul',3,'write','two books so far','he'],
+ ['pp','We',2,'clean','the house twice this week'],
+ ['pp','I',1,'meet','a lot of new people since September'],
+ // PRESENT PERFECT CONTINUOUS
+ ['ppc','I',1,'wait','for the bus for twenty minutes'],
+ ['ppc','She',3,'learn','Japanese since last September'],
+ ['ppc','They',2,'play','video games all afternoon'],
+ ['ppc','He',3,'run','for an hour','','He\'s very tired.'],
+ ['ppc','We',2,'clean','the house all morning'],
+ ['ppc','It',3,'rain','since this morning'],
+ ['ppc','My sister',3,'practise','the piano for two hours','she'],
+ ['ppc','You',2,'work','on that project since Monday'],
+ ['ppc','The children',2,'swim','for hours','they'],
+ ['ppc','Dan',3,'study','for the test all week','he'],
+ ['ppc','I',1,'read','this book for three days'],
+ ['ppc','Our neighbours',2,'build','their new garage since May','they'],
+ // WILL
+ ['wil','People',2,'live','on Mars in the year 2100','they'],
+ ['wil','Robots',2,'do','all the housework in the future','they'],
+ ['wil','I',1,'open','the window','','It\'s hot in here.'],
+ ['wil','Cars',2,'fly','in the future','they'],
+ ['wil','My team',3,'win','the league one day','it'],
+ ['wil','He',3,'call','you back later','','Don\'t worry.'],
+ ['wil','Doctors',2,'find','a cure for many diseases in the next fifty years','they'],
+ ['wil','I',1,'carry','your bag for you','','That bag looks heavy.'],
+ ['wil','She',3,'become','a famous singer one day'],
+ ['wil','Computers',2,'replace','many jobs in the future','they'],
+ ['wil','The weather',3,'get','warmer in the future','it'],
+ ['wil','We',2,'travel','to space on holiday one day'],
+ ['wil','You',2,'love','this book','','I\'m sure.'],
+ // GOING TO
+ ['gon','I',1,'visit','my cousins next weekend'],
+ ['gon','It',3,'rain','','','Look at those black clouds!'],
+ ['gon','She',3,'start','a new job next month'],
+ ['gon','We',2,'paint','the kitchen this weekend'],
+ ['gon','They',2,'buy','a new car next year'],
+ ['gon','He',3,'fall','off his chair','','Look out!'],
+ ['gon','My parents',2,'celebrate','their anniversary in Paris next month','they'],
+ ['gon','You',2,'miss','the bus','','Hurry up!'],
+ ['gon','Jack',3,'study','medicine at university next year','he'],
+ ['gon','I',1,'cook','paella for dinner tonight'],
+ ['gon','The glass',3,'break','','it','Be careful!'],
+ ['gon','We',2,'have','a party on Saturday'],
+];
+
+/* time expressions: [text, tenses] */
+const MARKERS = [
+ ['every day',['ps']],['on Mondays',['ps']],['twice a week',['ps']],['usually',['ps']],['always',['ps']],['once a month',['ps']],['at the weekend',['ps']],['often',['ps']],
+ ['now',['pc']],['right now',['pc']],['at the moment',['pc']],['Look!',['pc']],['Listen!',['pc']],['today',['pc']],['this week',['pc']],['currently',['pc']],
+ ['yesterday',['pas']],['last night',['pas']],['last week',['pas']],['two days ago',['pas']],['in 2015',['pas']],['when I was a child',['pas']],['last summer',['pas']],['an hour ago',['pas']],
+ ['while',['pac']],['at 8 pm yesterday',['pac']],['at this time last week',['pac']],['at that moment',['pac']],['at midnight last night',['pac']],
+ ['ever',['pp']],['never',['pp','ps']],['already',['pp']],['yet',['pp']],['just',['pp']],['so far',['pp']],['three times',['pp']],['since',['pp','ppc']],['for',['pp','ppc']],
+ ['all day',['ppc']],['all morning',['ppc']],['How long…?',['ppc','pp']],['for hours',['ppc']],['non-stop',['ppc']],
+ ['in the future',['wil']],['probably',['wil']],['I\'m sure…',['wil']],['one day',['wil']],['in 2100',['wil']],['I promise…',['wil']],['I think…',['wil']],
+ ['Look at those clouds!',['gon']],['Watch out!',['gon']],['I\'ve decided…',['gon']],['We\'ve already bought the tickets.',['gon']],
+ ['tomorrow',['wil','gon']],['next week',['wil','gon']],['tonight',['wil','gon']],['next year',['wil','gon']]
+];
+
+/* =========================================================
+   VERB ENGINE
+   ========================================================= */
+const IRR = {go:['went','gone'],have:['had','had'],do:['did','done'],make:['made','made'],take:['took','taken'],eat:['ate','eaten'],drink:['drank','drunk'],write:['wrote','written'],read:['read','read'],see:['saw','seen'],buy:['bought','bought'],come:['came','come'],get:['got','got'],give:['gave','given'],leave:['left','left'],meet:['met','met'],run:['ran','run'],sleep:['slept','slept'],speak:['spoke','spoken'],swim:['swam','swum'],teach:['taught','taught'],think:['thought','thought'],wear:['wore','worn'],win:['won','won'],lose:['lost','lost'],sing:['sang','sung'],ride:['rode','ridden'],fly:['flew','flown'],break:['broke','broken'],find:['found','found'],know:['knew','known'],sit:['sat','sat'],tell:['told','told'],feel:['felt','felt'],send:['sent','sent'],build:['built','built'],catch:['caught','caught'],drive:['drove','driven'],forget:['forgot','forgotten'],begin:['began','begun'],cut:['cut','cut'],put:['put','put'],spend:['spent','spent'],stand:['stood','stood'],understand:['understood','understood'],fall:['fell','fallen'],become:['became','become'],cost:['cost','cost'],bring:['brought','brought'],choose:['chose','chosen'],draw:['drew','drawn'],grow:['grew','grown'],hear:['heard','heard'],keep:['kept','kept'],pay:['paid','paid'],say:['said','said'],sell:['sold','sold'],throw:['threw','thrown'],wake:['woke','woken'],hit:['hit','hit'],let:['let','let'],lend:['lent','lent'],light:['lit','lit'],fight:['fought','fought'],hold:['held','held'],shut:['shut','shut'],steal:['stole','stolen'],bite:['bit','bitten'],hide:['hid','hidden'],blow:['blew','blown'],dig:['dug','dug'],feed:['fed','fed'],forgive:['forgave','forgiven'],freeze:['froze','frozen'],lie:['lay','lain'],mean:['meant','meant'],ring:['rang','rung'],rise:['rose','risen'],shine:['shone','shone'],shoot:['shot','shot'],show:['showed','shown'],sink:['sank','sunk'],spell:['spelt','spelt'],swing:['swung','swung'],tear:['tore','torn'],wind:['wound','wound']};
+const DOUBLE = new Set(['run','swim','sit','get','stop','plan','shop','begin','put','cut','travel','win','chat','drop','jog','hit','forget','prefer','refer','dig','let','set','shut','swap','rob','hug','nod','beg','admit','control','regret','cancel','skip','trip','grab','rub','tap','wrap']);
+
+function third(v){ if(v==='have')return 'has'; if(v==='be')return 'is'; if(/(s|x|z|ch|sh|o)$/.test(v))return v+'es'; if(/[^aeiou]y$/.test(v))return v.slice(0,-1)+'ies'; return v+'s'; }
+function ing(v){ if(v==='be')return 'being'; if(/ie$/.test(v))return v.slice(0,-2)+'ying'; if(/[^e]e$/.test(v)&&!/(ee|ye|oe)$/.test(v))return v.slice(0,-1)+'ing'; if(DOUBLE.has(v))return v+v.slice(-1)+'ing'; return v+'ing'; }
+function regPast(v){ if(/e$/.test(v))return v+'d'; if(/[^aeiou]y$/.test(v))return v.slice(0,-1)+'ied'; if(DOUBLE.has(v))return v+v.slice(-1)+'ed'; return v+'ed'; }
+function past(v){ return IRR[v]?IRR[v][0]:regPast(v); }
+function ppart(v){ return IRR[v]?IRR[v][1]:regPast(v); }
+const beP = p => p===1?'am':p===3?'is':'are';
+const beS = p => p===2?'were':'was';
+const NEGBE = {am:'am not',is:"isn't",are:"aren't",was:"wasn't",were:"weren't"};
+const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+
+function vf(t,p,v){
+  switch(t){
+    case 'ps': return {aff:p===3?third(v):v, neg:(p===3?"doesn't ":"don't ")+v, qa:p===3?'Does':'Do', qv:v};
+    case 'pc': {const b=beP(p); return {aff:b+' '+ing(v), neg:NEGBE[b]+' '+ing(v), qa:cap(b), qv:ing(v)};}
+    case 'pas': return {aff:past(v), neg:"didn't "+v, qa:'Did', qv:v};
+    case 'pac': {const b=beS(p); return {aff:b+' '+ing(v), neg:NEGBE[b]+' '+ing(v), qa:cap(b), qv:ing(v)};}
+    case 'pp': {const h=p===3?'has':'have'; return {aff:h+' '+ppart(v), neg:h+"n't "+ppart(v), qa:cap(h), qv:ppart(v)};}
+    case 'ppc': {const h=p===3?'has':'have'; return {aff:h+' been '+ing(v), neg:h+"n't been "+ing(v), qa:cap(h), qv:'been '+ing(v)};}
+    case 'wil': return {aff:'will '+v, neg:"won't "+v, qa:'Will', qv:v};
+    case 'gon': {const b=beP(p); return {aff:b+' going to '+v, neg:NEGBE[b]+' going to '+v, qa:cap(b), qv:'going to '+v};}
+  }
+}
+const F = it => vf(it.t,it.p,it.v);
+
+const LOWER_FIRST = new Set(['He','She','It','We','They','You','My','Your','His','Her','Our','Their','The','This','That','These','Those','A','An','People','Robots','Cars','Doctors','Computers']);
+function lowerSub(s){ if(s==='I')return s; const w=s.split(' ')[0]; return LOWER_FIRST.has(w)? s.charAt(0).toLowerCase()+s.slice(1) : s; }
+const tail = it => it.r? ' '+it.r : '';
+function affS(it){ return `${it.s} ${F(it).aff}${tail(it)}.`; }
+function negS(it){ return `${it.s} ${F(it).neg}${tail(it)}.`; }
+function qS(it){ const f=F(it); return `${f.qa} ${lowerSub(it.s)} ${f.qv}${tail(it)}?`; }
+function withCtx(it,s){ return it.c? it.c+' '+s : s; }
+
+function ansPron(it){
+  const map={I:['you',2],You:['I',1],He:['he',3],She:['she',3],It:['it',3],We:['we',2],They:['they',2]};
+  if(map[it.s])return map[it.s];
+  const pr=it.pron||(it.p===3?'he':'they');
+  return [pr,(pr==='they'||pr==='we'||pr==='you')?2:3];
+}
+function shortAns(it,yes){
+  const [ap,pp]=ansPron(it); let y,n;
+  switch(it.t){
+    case 'ps': y=pp===3?'does':'do'; n=pp===3?"doesn't":"don't"; break;
+    case 'pc': case 'gon': y=beP(pp); n=NEGBE[y]; break;
+    case 'pas': y='did'; n="didn't"; break;
+    case 'pac': y=beS(pp); n=NEGBE[y]; break;
+    case 'pp': case 'ppc': y=pp===3?'has':'have'; n=y+"n't"; break;
+    case 'wil': y='will'; n="won't"; break;
+  }
+  if(yes) return `Yes, ${ap} ${y}.`;
+  if(n==='am not') return `No, I'm not.`;
+  return `No, ${ap} ${n}.`;
+}
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+function mulberry(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return((t^t>>>14)>>>0)/4294967296; }; }
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const GAP = '<span class="gap"></span>';
+const L = 'abcdefghijklmnop';
+function shuffle(a,rng){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+const ctxHtml = it => it.c? `<span class="ctx">${esc(it.c)}</span> ` : '';
+const tn = t => NAMES[t].en;
+const lc = s => s.charAt(0).toLowerCase()+s.slice(1);
+
+function toItem(a){ return {t:a[0],s:a[1],p:+a[2],v:a[3],r:a[4]||'',pron:a[5]||'',c:a[6]||''}; }
+const BANK = BANK_RAW.map(toItem);
+
+/* =========================================================
+   EXTRA TOPICS (not verb tenses): countable/uncountable, conditionals
+   Template gaps: {answer|hint|distractor1/distractor2}
+   ========================================================= */
+const XTOPICS = {
+  cu:{en:'Countable & uncountable', es:'Contables e incontables'},
+  c0:{en:'Zero conditional', es:'Condicional cero'},
+  c1:{en:'First conditional', es:'Primer condicional'},
+  c2:{en:'Second conditional', es:'Segundo condicional'}
+};
+const XALL = Object.keys(XTOPICS);
+const NAMES = Object.assign({}, TENSES, XTOPICS);
+const isCond = t => /^c[012]$/.test(t);
+
+const TPL_RAW = [
+ // COUNTABLE & UNCOUNTABLE
+ ['cu','There is {some||a/many} milk in the fridge.'],
+ ['cu','I eat {an||a/some} apple every day.'],
+ ['cu','Can I have {a||an/some} sandwich, please?'],
+ ['cu','There aren\'t {any||some/much} eggs in the box.'],
+ ['cu','Is there {any||many/a} bread for breakfast?'],
+ ['cu','How {much||many/any} water do you drink every day?'],
+ ['cu','How {many||much/any} books have you got?'],
+ ['cu','We haven\'t got {much||many/a} time.'],
+ ['cu','There are {a lot of||much/a} people in the park.'],
+ ['cu','She has got {some||a/much} friends in Madrid.'],
+ ['cu','I need {some||a/many} money for the cinema.'],
+ ['cu','There isn\'t {any||some/many} juice left.'],
+ ['cu','He drinks {a lot of||many/a} coffee.'],
+ ['cu','Would you like {an||a/any} orange?'],
+ ['cu','There are {some||a/much} tomatoes in the salad.'],
+ ['cu','My mum buys {some||an/many} cheese at the market.'],
+ ['cu','How {much||many/any} sugar do you want in your tea?'],
+ ['cu','I have got {an||a/any} umbrella in my bag.'],
+ ['cu','There is {a||an/some} cat on the sofa.'],
+ ['cu','We have got {a lot of||many/an} homework today.'],
+ ['cu','Are there {any||much/a} biscuits in the cupboard?'],
+ ['cu','I don\'t drink {much||many/a} milk.'],
+ ['cu','There are {many||much/a} animals at the zoo.'],
+ ['cu','Have you got {any||much/a} brothers or sisters?'],
+ // ZERO CONDITIONAL
+ ['c0','If you {heat|heat|heats/will heat} ice, it {melts|melt|melt/would melt}.'],
+ ['c0','If you {mix|mix|mixed/will mix} red and white, you {get|get|got/would get} pink.'],
+ ['c0','If it {rains|rain|rain/will rain}, the grass {gets|get|get/would get} wet.'],
+ ['c0','If I {don\'t sleep|not / sleep|didn\'t sleep/won\'t sleep}, I {feel|feel|felt/would feel} tired.'],
+ ['c0','If you {don\'t water|not / water|didn\'t water/won\'t water} plants, they {die|die|died/would die}.'],
+ ['c0','If you {freeze|freeze|froze/will freeze} water, it {turns|turn|turn/would turn} into ice.'],
+ ['c0','If my dog {sees|see|saw/will see} a cat, it {barks|bark|barked/would bark}.'],
+ ['c0','If you {press|press|pressed/will press} this button, the light {goes|go|go/would go} on.'],
+ ['c0','If the sun {shines|shine|shone/will shine}, it {is|be|was/would be} hot.'],
+ ['c0','If babies {are|be|were/will be} hungry, they {cry|cry|cried/would cry}.'],
+ ['c0','If you {drop|drop|dropped/will drop} an egg, it {breaks|break|broke/would break}.'],
+ ['c0','If plants {don\'t get|not / get|didn\'t get/won\'t get} light, they {don\'t grow|not / grow|didn\'t grow/wouldn\'t grow}.'],
+ // FIRST CONDITIONAL
+ ['c1','If it {rains|rain|will rain/rained}, we {will stay|stay|stay/would stay} at home.'],
+ ['c1','If you {study|study|will study/studied}, you {will pass|pass|pass/would pass} the exam.'],
+ ['c1','If I {see|see|will see/saw} Tom, I {will tell|tell|tell/would tell} him.'],
+ ['c1','If we {don\'t hurry|not / hurry|won\'t hurry/didn\'t hurry}, we {will miss|miss|miss/would miss} the bus.'],
+ ['c1','If she {is|be|will be/was} late, the teacher {will be|be|is/would be} angry.'],
+ ['c1','If you {eat|eat|will eat/ate} all those sweets, you {will feel|feel|feel/would feel} sick.'],
+ ['c1','If it {is|be|will be/was} sunny tomorrow, we {will go|go|go/would go} to the beach.'],
+ ['c1','If you {don\'t wear|not / wear|won\'t wear/didn\'t wear} a coat, you {will be|be|are/would be} cold.'],
+ ['c1','If they {win|win|will win/won} the match, they {will be|be|are/would be} very happy.'],
+ ['c1','If I {finish|finish|will finish/finished} my homework, I {will play|play|play/would play} video games.'],
+ ['c1','If Mum {buys|buy|will buy/bought} eggs, she {will make|make|makes/would make} a cake.'],
+ ['c1','If you {don\'t tidy|not / tidy|won\'t tidy/didn\'t tidy} your room, you {won\'t go|not / go|don\'t go/wouldn\'t go} to the party.'],
+ // SECOND CONDITIONAL
+ ['c2','If I {had|have|have/will have} a million euros, I {would buy|buy|will buy/buy} a castle.'],
+ ['c2','If I {were|be|am/will be} a bird, I {would fly|fly|will fly/fly} around the world.'],
+ ['c2','If we {lived|live|live/will live} near the beach, we {would swim|swim|will swim/swim} every day.'],
+ ['c2','If she {spoke|speak|speaks/will speak} Chinese, she {would travel|travel|will travel/travels} to China.'],
+ ['c2','If I {could|can|can/will can} fly, I {would visit|visit|will visit/visit} the moon.'],
+ ['c2','If my dog {could|can|can/will can} talk, it {would tell|tell|will tell/tells} me secrets.'],
+ ['c2','If I {met|meet|meet/will meet} a famous footballer, I {would ask|ask|will ask/ask} for a photo.'],
+ ['c2','If they {didn\'t have|not / have|don\'t have/won\'t have} homework, they {would be|be|will be/are} very happy.'],
+ ['c2','If I {found|find|find/will find} a treasure, I {would share|share|will share/share} it with my friends.'],
+ ['c2','If he {ate|eat|eats/will eat} more vegetables, he {would be|be|will be/is} healthier.'],
+ ['c2','If we {had|have|have/will have} a robot, it {would do|do|will do/does} our homework.'],
+ ['c2','If I {were|be|am/will be} you, I {would study|study|will study/study} more.']
+];
+function parseTpl(t,src){
+  const parts=[]; let re=/\{([^}]*)\}/g, last=0, m;
+  while((m=re.exec(src))){ if(m.index>last)parts.push(src.slice(last,m.index)); const [a,h,d]=m[1].split('|'); parts.push({a,h:h||'',d:(d||'').split('/').filter(Boolean)}); last=re.lastIndex; }
+  if(last<src.length)parts.push(src.slice(last));
+  return {t,kind:'tpl',parts};
+}
+const TPL = TPL_RAW.map(r=>parseTpl(r[0],r[1]));
+const gapIdx = it => it.parts.map((p,i)=>typeof p==='object'?i:-1).filter(i=>i>=0);
+/* render a template item; f(gap, index) returns HTML for that gap */
+const tplHtml = (it,f) => it.parts.map((p,i)=>typeof p==='string'?esc(p):f(p,i)).join('');
+const tplFull = it => it.parts.map(p=>typeof p==='string'?p:p.a).join('');
+const tplWith = (it,i,w) => it.parts.map((p,j)=>typeof p==='string'?p:(j===i?w:p.a)).join('');
+
+const NOUNS = {
+  c:['apple','banana','egg','book','chair','orange','sandwich','biscuit','tomato','pencil','friend','car','bottle','potato','animal','umbrella'],
+  u:['milk','water','bread','cheese','rice','sugar','money','juice','butter','pasta','homework','music','salt','meat','time','information']
+};
+const CU_BANK = 'a · an · some · any · much · many · a lot of';
+
+/* theory for the extra topics */
+const XGRAMMAR = {
+  cu:{uses:[['check','<b>countable</b>: we can count them: one apple, two apples'],['wave','<b>uncountable</b>: we can\'t count them: milk, water, rice, money']],
+      head:['','Countable','Uncountable'],
+      rows:[['+','There are <b>some</b> apples. · <b>an</b> apple / <b>a</b> pear','There is <b>some</b> milk.'],['−','There aren\'t <b>any</b> apples.','There isn\'t <b>any</b> milk.'],['?','How <b>many</b> apples?','How <b>much</b> milk?']],
+      ex:'There are some eggs, but there isn\'t any milk.',
+      tip:'Uncountable nouns have no plural and no <b>a / an</b>: <s>a water</s> → some water · <s>breads</s> → bread',
+      clues:['a / an','some','any','much','many','a lot of']},
+  c0:{uses:[['globe','facts: things that are <b>always</b> true'],['loop','the result happens <b>every time</b>']],
+      rows:[['IF','If + <b>present simple</b>,','<b>present simple</b>'],['−','If I <b>don\'t</b> sleep,','I <b>feel</b> tired.']],
+      ex:'If you heat ice, it melts.',
+      tip:'You can change the order: Ice melts <b>if</b> you heat it. (no comma!)',
+      clues:['if','when'], vis:['present simple','present simple','always']},
+  c1:{uses:[['star','<b>real</b> or <b>possible</b> situations in the future'],['bulb','what will happen <b>if</b> something happens']],
+      rows:[['IF','If + <b>present simple</b>,','<b>will / won\'t</b> + verb'],['−','If it <b>doesn\'t</b> rain,','we <b>will</b> go out.'],['?','','What <b>will</b> you do if…?']],
+      ex:'If it rains, we will stay at home.',
+      tip:'Never use <b>will</b> after <b>if</b>: <s>If it will rain</s> → If it <b>rains</b>',
+      clues:['if','will','won\'t','tomorrow'], vis:['present simple','will + verb','possible']},
+  c2:{uses:[['heart','<b>imaginary</b> situations and <b>dreams</b>'],['eye','things that are <b>not true now</b> or are unlikely']],
+      rows:[['IF','If + <b>past simple</b>,','<b>would / wouldn\'t</b> + verb'],['−','If I <b>didn\'t</b> have homework,','I <b>would</b> play.'],['?','','What <b>would</b> you do if…?']],
+      ex:'If I had a million euros, I would buy a castle.',
+      tip:'With <b>be</b> we say <b>were</b> for everybody: If I <b>were</b> you, I would study!',
+      clues:['if','would','wouldn\'t','imagine…'], vis:['past simple','would + verb','imaginary']}
+};
+function xVisual(t){
+  const T=(x,y,s,a='middle',sz=12)=>`<text x="${x}" y="${y}" text-anchor="${a}" stroke="none" fill="#1d1d1f" font-size="${sz}" font-family="Patrick Hand, Comic Sans MS, cursive">${s}</text>`;
+  if(t==='cu'){
+    const apple=x=>`<path d="M${x} 16c-7-4-13 1-12 9 1 9 7 13 12 11 5 2 11-2 12-11 1-8-5-13-12-9z" stroke-width="1.8"/><path d="M${x} 16c0-4 2-6 4-7" stroke-width="1.6"/>`;
+    return `<svg class="tl" viewBox="0 0 240 64" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      ${apple(22)}${apple(52)}${apple(82)}${T(22,52,'1')}${T(52,52,'2')}${T(82,52,'3')}${T(52,63,'✓ we can count')}
+      <path d="M160 10h30l-4 34h-22z" stroke-width="1.8"/><path d="M162 24c5 3 9-3 14 0s9 3 13 0" stroke-width="1.4"/>
+      <path d="M204 30c3-6 10-6 13 0" stroke-width="1.4" stroke-dasharray="2 3"/>${T(196,63,'✗ we can\'t count')}${T(220,24,'?','middle',16)}</svg>`;
+  }
+  const v=XGRAMMAR[t].vis;
+  return `<svg class="tl" viewBox="0 0 240 60" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4" y="12" width="96" height="34" rx="12" stroke-width="1.8" stroke-dasharray="${t==='c2'?'5 4':'0'}"/>
+    <rect x="140" y="12" width="96" height="34" rx="12" stroke-width="1.8" stroke-dasharray="${t==='c2'?'5 4':'0'}"/>
+    <path d="M104 29h30M127 23l7 6-7 6" stroke-width="2"/>
+    ${T(52,26,'IF…','middle',13)}${T(52,40,v[0],'middle',11)}${T(188,26,'result','middle',13)}${T(188,40,v[1],'middle',11)}${T(120,58,v[2],'middle',11)}</svg>`;
+}
+
+
+function distract(it,mode,ctx,k){
+  const correct=F(it)[mode], c=[];
+  shuffle(ctx.tenses.filter(t=>t!==it.t),ctx.rng).forEach(t=>c.push(vf(t,it.p,it.v)[mode]));
+  c.push(vf(it.t,it.p===3?2:3,it.v)[mode]);
+  if(it.t==='ps'&&it.p===3) c.push(it.v);
+  shuffle(TALL.filter(t=>t!==it.t&&!ctx.tenses.includes(t)),ctx.rng).forEach(t=>c.push(vf(t,it.p,it.v)[mode]));
+  const out=[]; for(const x of c){ if(x!==correct&&!out.includes(x))out.push(x); if(out.length>=k)break; }
+  return out;
+}
+
+/* =========================================================
+   ACTIVITIES
+   ========================================================= */
+const ACTS = [
+ {id:'fill', es:'Completar huecos', def:8, on:true,
+  en:'Complete the sentences with the correct form of the verb in brackets.',
+  esI:'Completa las frases con la forma correcta del verbo entre paréntesis.',
+  gen(ctx,n){
+    const rows=[],keys=[], items=ctx.pick(n);
+    items.forEach(it=>{
+      if(it.kind==='tpl'){
+        rows.push(tplHtml(it,g=>`${GAP}${g.h?` <span class="hint">(${esc(g.h)})</span>`:''}`));
+        keys.push(it.parts.filter(p=>typeof p==='object').map(p=>`<b>${esc(p.a)}</b>`).join(' · '));
+        return;
+      }
+      const neg=ctx.rng()<0.3, f=F(it);
+      rows.push(`${ctxHtml(it)}${esc(it.s)} ${GAP} <span class="hint">(${neg?'not / ':''}${esc(it.v)})</span>${esc(tail(it))}.`);
+      keys.push(`<b>${esc(neg?f.neg:f.aff)}</b>`);
+    });
+    const hasCU=items.some(it=>it.t==='cu'), allVerb=items.every(it=>it.t!=='cu');
+    if(!allVerb){ this._ins = hasCU&&items.every(it=>it.t==='cu') ? 'Complete the sentences with the words in the box.' : 'Complete the sentences. Use the words in the box or in brackets.';
+                  this._insEs = hasCU&&items.every(it=>it.t==='cu') ? 'Completa las frases con las palabras del recuadro.' : 'Completa las frases con las palabras del recuadro o entre paréntesis.'; }
+    const bank = hasCU ? `<div class="bank">${CU_BANK.split(' · ').map(w=>`<span>${w}</span>`).join('')}</div>` : '';
+    return {body:bank+`<ol class="items">${rows.map(r=>`<li>${r}</li>`).join('')}</ol>`, key:keys, pts:n};
+  }},
+ {id:'choice', es:'Elegir a / b / c', def:6, on:true,
+  en:'Choose the correct option: a, b or c.',
+  esI:'Elige la opción correcta: a, b o c.',
+  gen(ctx,n){
+    const rows=[],keys=[];
+    ctx.pick(n).forEach(it=>{
+      let right, opts, line;
+      if(it.kind==='tpl'){
+        const gi=gapIdx(it), ti=gi[Math.floor(ctx.rng()*gi.length)], g=it.parts[ti];
+        right=g.a; opts=shuffle([g.a,...g.d.slice(0,2)],ctx.rng);
+        line=tplHtml(it,(p,i)=>i===ti?GAP:esc(p.a));
+      } else {
+        const f=F(it); right=f.aff; opts=shuffle([f.aff,...distract(it,'aff',ctx,2)],ctx.rng);
+        line=`${ctxHtml(it)}${esc(it.s)} ${GAP}${esc(tail(it))}.`;
+      }
+      rows.push(`${line}<div class="opts">${opts.map((o,i)=>`<span><b>${L[i]})</b> ${esc(o)}</span>`).join('')}</div>`);
+      keys.push(`<b>${L[opts.indexOf(right)]}</b> – ${esc(right)}`);
+    });
+    return {body:`<ol class="items">${rows.map(r=>`<li>${r}</li>`).join('')}</ol>`, key:keys, pts:n};
+  }},
+ {id:'circle', es:'Rodear la opción correcta', def:8, on:false,
+  en:'Circle the correct option.',
+  esI:'Rodea la opción correcta.',
+  gen(ctx,n){
+    const rows=[],keys=[];
+    const pill=(r,w)=>{ const o=ctx.rng()<0.5?[r,w]:[w,r]; return `<span class="circ">${esc(o[0])} / ${esc(o[1])}</span>`; };
+    ctx.pick(n).forEach(it=>{
+      if(it.kind==='tpl'){
+        const gi=gapIdx(it); const k=[];
+        rows.push(tplHtml(it,(g,i)=>{ k.push(g.a); return pill(g.a,g.d[Math.floor(ctx.rng()*Math.min(2,g.d.length))]); }));
+        keys.push(k.map(x=>`<b>${esc(x)}</b>`).join(' · '));
+        return;
+      }
+      const f=F(it), neg=ctx.rng()<0.25, mode=neg?'neg':'aff', right=f[mode], wrong=distract(it,mode,ctx,1)[0];
+      rows.push(`${ctxHtml(it)}${esc(it.s)} ${pill(right,wrong)}${esc(tail(it))}.`);
+      keys.push(`<b>${esc(right)}</b>`);
+    });
+    return {body:`<ol class="items">${rows.map(r=>`<li>${r}</li>`).join('')}</ol>`, key:keys, pts:n};
+  }},
+ {id:'error', es:'Encontrar y corregir errores', def:6, on:true,
+  en:'Some sentences have a mistake. Correct them. Tick (✓) the correct sentences.',
+  esI:'Algunas frases tienen un error. Corrígelas. Marca (✓) las correctas.',
+  gen(ctx,n){
+    const rows=[],keys=[], items=ctx.pick(n);
+    const nOk=Math.max(1,Math.round(items.length*0.3)), okIdx=new Set(shuffle([...Array(items.length).keys()],ctx.rng).slice(0,nOk));
+    items.forEach((it,i)=>{
+      let right, shown, sent;
+      if(it.kind==='tpl'){
+        const gi=gapIdx(it), ti=gi[Math.floor(ctx.rng()*gi.length)], g=it.parts[ti];
+        right=g.a; shown=okIdx.has(i)?g.a:g.d[Math.floor(ctx.rng()*Math.min(2,g.d.length))];
+        sent=esc(tplWith(it,ti,shown));
+      } else {
+        const f=F(it), mode=ctx.rng()<0.25?'neg':'aff'; right=f[mode];
+        const ds=distract(it,mode,ctx,2); shown=okIdx.has(i)?right:ds[Math.floor(ctx.rng()*ds.length)];
+        sent=`${ctxHtml(it)}${esc(it.s)} ${esc(shown)}${esc(tail(it))}.`;
+      }
+      rows.push(`${sent} <span class="mbox"></span><div class="wline"></div>`);
+      keys.push(okIdx.has(i)? '✓ Correct' : `<s>${esc(shown)}</s> → <b>${esc(right)}</b>`);
+    });
+    return {body:`<ol class="items">${rows.map(r=>`<li>${r}</li>`).join('')}</ol>`, key:keys, pts:items.length};
+  }},
+ {id:'unscramble', es:'Ordenar las palabras', def:6, on:true,
+  en:'Put the words in the correct order to make sentences.',
+  esI:'Ordena las palabras para formar frases.',
+  gen(ctx,n){
+    const rows=[],keys=[];
+    ctx.pick(n).forEach(it=>{
+      let sent, words, pre='';
+      if(it.kind==='tpl'){
+        sent=tplFull(it);
+        words=sent.slice(0,-1).replace(/,/g,'').split(' ');
+        if(words[0]!=='I') words[0]=lc(words[0]);
+      } else {
+        const kind = it.p!==1 && ctx.rng()<0.35 ? 'q' : (ctx.rng()<0.3?'neg':'aff');
+        sent = kind==='q'? qS(it) : kind==='neg'? negS(it) : affS(it);
+        words=sent.slice(0,-1).split(' ');
+        words[0]=lowerSub(words[0]==='I'?'I':(words[0].match(/^(Do|Does|Did|Is|Are|Am|Was|Were|Have|Has|Will)$/)?lc(words[0]):words[0]));
+        pre=ctxHtml(it); sent=withCtx(it,sent);
+      }
+      const punct=sent.slice(-1);
+      let sh=shuffle(words,ctx.rng), tries=0; while(sh.join(' ')===words.join(' ')&&tries++<10) sh=shuffle(words,ctx.rng);
+      rows.push(`${pre}<span class="words">${sh.map(esc).join(' / ')}</span> <span class="hint">( ${punct} )</span><div class="wline"></div>`);
+      keys.push(esc(sent));
+    });
+    return {body:`<ol class="items">${rows.map(r=>`<li>${r}</li>`).join('')}</ol>`, key:keys, pts:n, one:true};
+  }},
+ {id:'transform', es:'Pasar a negativa y pregunta', def:5, on:false, needs:'tense',
+  en:'Write the negative (−) and the question (?) form of each sentence.',
+  esI:'Escribe la forma negativa (−) y la pregunta (?) de cada frase.',
+  gen(ctx,n){
+    if(!ctx.tenses.length) return null;
+    const rows=[],keys=[];
+    ctx.pick(n,it=>it.kind!=='tpl'&&it.p!==1).forEach(it=>{
+      rows.push(`${ctxHtml(it)}${esc(affS(it))}<div class="wline lbl">(−)</div><div class="wline lbl">(?)</div>`);
+      keys.push(`(−) ${esc(negS(it))}<br>(?) ${esc(qS(it))}`);
+    });
+    if(!rows.length) return null;
+    return {body:`<ol class="items">${rows.map(r=>`<li>${r}</li>`).join('')}</ol>`, key:keys, pts:rows.length*2, one:true};
+  }},
+ {id:'match', es:'Unir las dos partes', def:6, on:true,
+  en:'Match the questions (1–{n}) with the answers (a–{L}).',
+  esI:'Une las preguntas con las respuestas.',
+  gen(ctx,n){
+    const pairs=[], seen=new Set();
+    const pool=ctx.pick(n*3,it=>it.kind==='tpl'?isCond(it.t):it.p!==1);
+    for(const it of pool){ if(pairs.length>=n)break;
+      if(it.kind==='tpl'){
+        const s=tplFull(it), k=s.indexOf(', '); if(k<0)continue;
+        const a=s.slice(0,k+1), b=s.slice(k+2); if(seen.has(a))continue; seen.add(a); pairs.push([a,b,'c']); continue;
+      }
+      const sig=shortAns(it,true); if(seen.has(sig))continue;
+      seen.add(sig); pairs.push([withCtx(it,qS(it)),shortAns(it,ctx.rng()<0.5),'q']);
+    }
+    if(!pairs.length) return null;
+    const allC=pairs.every(p=>p[2]==='c'), anyC=pairs.some(p=>p[2]==='c');
+    this._ins = allC ? 'Match the two halves of the sentences (1–{n} with a–{L}).' : anyC ? 'Match 1–{n} with a–{L}: questions with answers, and sentence beginnings with endings.' : null;
+    this._insEs = allC ? 'Une las dos partes de cada frase.' : anyC ? 'Une las preguntas con sus respuestas y los principios de frase con sus finales.' : null;
+    const order=shuffle(pairs.map((_,i)=>i),ctx.rng);
+    const left=`<ol>${pairs.map(p=>`<li><span class="mbox"></span> ${esc(p[0])}</li>`).join('')}</ol>`;
+    const right=`<ul>${order.map((pi,j)=>`<li><b>${L[j]})</b> ${esc(pairs[pi][1])}</li>`).join('')}</ul>`;
+    const keys=pairs.map((p,i)=>`<b>${L[order.indexOf(i)]}</b>`);
+    return {body:`<div class="match">${left}${right}</div>`, key:keys, pts:pairs.length, n:pairs.length};
+  }},
+ {id:'identify', es:'¿Qué tiempo / condicional es?', def:6, on:false, min2:true,
+  en:'Read the sentences. Which tense is it? Write the name.',
+  esI:'Lee las frases. ¿Qué tiempo verbal es? Escribe el nombre.',
+  gen(ctx,n){
+    const ids=ctx.topics.filter(t=>TENSES[t]||isCond(t));
+    if(ids.length<2) return null;
+    const rows=[],keys=[];
+    ctx.pick(n,it=>ids.includes(it.t)).forEach(it=>{
+      let s;
+      if(it.kind==='tpl') s=tplFull(it);
+      else { const k=ctx.rng(); s=withCtx(it, it.p!==1&&k<0.25? qS(it) : k<0.5? negS(it) : affS(it)); }
+      rows.push(`${esc(s)}<div class="wline lbl">→</div>`);
+      keys.push(tn(it.t));
+    });
+    const hasT=ids.some(t=>TENSES[t]), hasC=ids.some(isCond);
+    if(hasC){ this._ins = hasT ? 'Read the sentences. Which tense or conditional is it? Write the name.' : 'Read the sentences. Which conditional is it? Write the name.';
+              this._insEs = hasT ? 'Lee las frases. ¿Qué tiempo verbal o condicional es? Escribe el nombre.' : 'Lee las frases. ¿Qué condicional es? Escribe el nombre.'; }
+    const list=`<div class="tenses-list">Options: ${ids.map(t=>`<b>${tn(t)}</b>`).join(' · ')}</div>`;
+    return {body:list+`<ol class="items">${rows.map(r=>`<li>${r}</li>`).join('')}</ol>`, key:keys, pts:rows.length};
+  }},
+ {id:'classify', es:'Clasificar (expresiones / sustantivos)', def:12, on:false,
+  en:'Write the time expressions in the correct column.',
+  esI:'Escribe las expresiones de tiempo en la columna correcta.',
+  gen(ctx,n){
+    const sel=ctx.tenses, parts=[];
+    let body='', keyHtml='', pts=0;
+    const table=(cols,fill)=>`<table class="cls"><tr>${cols.map(c=>`<th>${c[0]}</th>`).join('')}</tr><tr>${cols.map(c=>`<td>${fill?c[1].map(esc).join('<br>'):''}</td>`).join('')}</tr></table>`;
+    if(ctx.topics.includes('cu')){
+      const k=Math.ceil(n/2);
+      const c=shuffle(NOUNS.c,ctx.rng).slice(0,k), u=shuffle(NOUNS.u,ctx.rng).slice(0,n-k);
+      const cols=[['Countable',c],['Uncountable',u]];
+      body+=`<div class="bank">${shuffle([...c,...u],ctx.rng).map(w=>`<span>${esc(w)}</span>`).join('')}</div>`+table(cols,false);
+      keyHtml+=table(cols,true); pts+=n; parts.push('nouns');
+    }
+    if(sel.length===1){
+      const t=sel[0];
+      const yes=shuffle(MARKERS.filter(m=>m[1].includes(t)),ctx.rng).slice(0,Math.ceil(n/2));
+      const no=shuffle(MARKERS.filter(m=>!m[1].includes(t)),ctx.rng).slice(0,n-yes.length);
+      if(body) body+=`<p class="hint" style="margin:10px 0 0">Now circle the time expressions we use with the <b>${lc(tn(t))}</b>:</p>`;
+      body+=`<div class="bank">${shuffle([...yes,...no],ctx.rng).map(m=>`<span>${esc(m[0])}</span>`).join('')}</div>`;
+      keyHtml+=`<ol class="one"><li>${yes.map(m=>esc(m[0])).join(' · ')}</li></ol>`; pts+=yes.length; parts.push('circle');
+    } else if(sel.length>1){
+      const byT={}; sel.forEach(t=>byT[t]=shuffle(MARKERS.filter(m=>m[1].filter(x=>sel.includes(x)).length===1&&m[1].includes(t)),ctx.rng));
+      const chosen=[]; let i=0;
+      while(chosen.length<n && sel.some(t=>byT[t].length)){ const t=sel[i++%sel.length]; if(byT[t].length) chosen.push([byT[t].shift()[0],t]); }
+      const cols=sel.filter(t=>chosen.some(c=>c[1]===t)).map(t=>[tn(t),chosen.filter(c=>c[1]===t).map(c=>c[0])]);
+      if(body) body+=`<p class="hint" style="margin:10px 0 0">Now do the same with these time expressions:</p>`;
+      body+=`<div class="bank">${shuffle(chosen,ctx.rng).map(c=>`<span>${esc(c[0])}</span>`).join('')}</div>`+table(cols,false);
+      keyHtml+=table(cols,true); pts+=chosen.length; parts.push('time');
+    }
+    if(!parts.length) return null;
+    const onlyNouns=parts.length===1&&parts[0]==='nouns', onlyCircle=parts.length===1&&parts[0]==='circle';
+    this._ins = onlyNouns ? 'Are these nouns countable or uncountable? Write them in the correct column.'
+              : onlyCircle ? `Circle the time expressions we use with the <b>${lc(tn(sel[0]))}</b>.`
+              : parts[0]==='nouns' ? 'Write the words in the correct column.' : null;
+    this._insEs = onlyNouns ? '¿Son contables o incontables? Escríbelos en la columna correcta.'
+              : onlyCircle ? 'Rodea las expresiones de tiempo que usamos con este tiempo verbal.'
+              : parts[0]==='nouns' ? 'Escribe las palabras en la columna correcta.' : null;
+    return {body, keyHtml, pts};
+  }},
+ {id:'verbtable', es:'Tabla de formas verbales', def:8, on:false, needs:'tense',
+  en:'Complete the table with the correct verb forms.',
+  esI:'Completa la tabla con las formas verbales correctas.',
+  gen(ctx,n){
+    const sel=ctx.tenses, cols=[];
+    if(sel.includes('ps')) cols.push(['he / she / it',third]);
+    if(sel.some(t=>['pc','pac','ppc'].includes(t))) cols.push(['-ing form',ing]);
+    if(sel.includes('pas')) cols.push(['Past simple',past]);
+    if(sel.some(t=>['pp','ppc'].includes(t))) cols.push(['Past participle',ppart]);
+    if(!cols.length) return null;
+    const verbs=[]; for(const it of shuffle(ctx.pool.filter(it=>it.v),ctx.rng)){ if(!verbs.includes(it.v)&&it.v!=='be')verbs.push(it.v); if(verbs.length>=n)break; }
+    const head=`<tr><th>Verb</th>${cols.map(c=>`<th>${c[0]}</th>`).join('')}</tr>`;
+    const body=`<table class="vt">${head}${verbs.map(v=>`<tr><td>${esc(v)}</td>${cols.map(()=>'<td></td>').join('')}</tr>`).join('')}</table>`;
+    const key=`<table class="vt">${head}${verbs.map(v=>`<tr><td>${esc(v)}</td>${cols.map(c=>`<td>${esc(c[1](v))}</td>`).join('')}</tr>`).join('')}</table>`;
+    return {body, keyHtml:key, pts:verbs.length*cols.length};
+  }}
+];
+
+const PRESETS = [
+  ['Present simple vs continuous',['ps','pc']],
+  ['Past simple vs continuous',['pas','pac']],
+  ['Present cont. vs past cont.',['pc','pac']],
+  ['Past simple vs present perfect',['pas','pp']],
+  ['Present perfect simple vs cont.',['pp','ppc']],
+  ['Will vs going to',['wil','gon']],
+  ['Countable & uncountable',['cu']],
+  ['Conditionals 0 & 1',['c0','c1']],
+  ['Conditionals 0, 1 & 2',['c0','c1','c2']],
+  ['Todos los presentes',['ps','pc','pp','ppc']],
+  ['Repaso general',['ps','pc','pas','pac','pp','wil','gon']]
+];
+
+/* =========================================================
+   UI
+   ========================================================= */
+const $ = id => document.getElementById(id);
+let titleEdited=false;
+
+function buildUI(){
+  $('presets').innerHTML = PRESETS.map((p,i)=>`<button data-i="${i}">${p[0]}</button>`).join('');
+  $('presets').onclick = e => { const b=e.target.closest('button'); if(!b)return; const ts=PRESETS[b.dataset.i][1];
+    document.querySelectorAll('#tenses input, #topics input').forEach(c=>c.checked=ts.includes(c.value)); titleEdited=false; render(); };
+  $('tenses').innerHTML = TALL.map(t=>`<label class="chk"><input type="checkbox" value="${t}" ${t==='ps'||t==='pc'?'checked':''}><span class="t">${TENSES[t].en}<span class="note">${TENSES[t].es}</span></span></label>`).join('');
+  $('topics').innerHTML = XALL.map(t=>`<label class="chk"><input type="checkbox" value="${t}"><span class="t">${XTOPICS[t].en}<span class="note">${XTOPICS[t].es}</span></span></label>`).join('');
+  $('acts').innerHTML = ACTS.map(a=>`<div class="act-row"><label class="chk"><input type="checkbox" data-act="${a.id}" ${a.on?'checked':''}> ${a.es}</label><input type="number" min="1" max="20" value="${a.def}" data-n="${a.id}"></div>`).join('');
+  $('seed').value = Math.floor(Math.random()*90000)+10000;
+  $('title').oninput = ()=>{ titleEdited=true; render(); };
+  document.querySelectorAll('.controls input, .controls select, .controls textarea').forEach(el=>{ if(el.id!=='title') el.addEventListener('change',render); });
+  $('custom').addEventListener('input',debounce(render,600));
+  $('newVersion').onclick = ()=>{ $('seed').value=Math.floor(Math.random()*90000)+10000; render(); };
+  $('print').onclick = onPdf; $('mPdf').onclick = onPdf;
+  $('mOpts').onclick = ()=>window.scrollTo({top:0,behavior:'smooth'});
+  $('mView').onclick = ()=>$('preview').scrollIntoView({behavior:'smooth'});
+  window.addEventListener('resize',fitPreview);
+}
+function debounce(f,ms){ let t; return ()=>{ clearTimeout(t); t=setTimeout(f,ms); }; }
+
+function parseCustom(){
+  const out=[], errs=[];
+  $('custom').value.split('\n').forEach((line,i)=>{
+    if(!line.trim())return;
+    const p=line.split('|').map(s=>s.trim());
+    let t=(p[0]||'').toLowerCase(); t={will:'wil',going:'gon','going to':'gon'}[t]||t;
+    if(!TENSES[t]||p.length<4||!['1','2','3'].includes(p[2])){ errs.push(i+1); return; }
+    let v=p[3].toLowerCase();
+    if(v.includes('/')){ const [b,pa,pp]=v.split('/').map(s=>s.trim()); v=b; if(pa)IRR[b]=[pa,pp||pa]; }
+    out.push({t,s:p[1],p:+p[2],v,r:(p[4]||'').replace(/[.?!]+$/,''),pron:(p[5]||'').toLowerCase(),c:''});
+  });
+  $('customWarn').textContent = errs.length? `Revisa la(s) línea(s): ${errs.join(', ')}` : '';
+  return out;
+}
+
+function autoTitle(ts){
+  if(!ts.length) return 'English grammar';
+  const n=ts.map((t,i)=>i?lc(tn(t)):tn(t));
+  if(n.length===1) return n[0];
+  if(ts.every(isCond)) return 'Conditionals: '+ts.map(t=>({c0:'zero',c1:'first',c2:'second'})[t]).join(ts.length>2?', ':' & ').replace(/, ([^,]*)$/,' & $1');
+  if(n.length===2) return `${n[0]} vs ${n[1]}`;
+  return 'Review: '+n.slice(0,-1).join(', ')+' & '+n[n.length-1];
+}
+
+function render(){
+  document.body.className=$('theme').value;
+  if(mode()==='sci'){ const h=renderSci(); $('preview').innerHTML = h || '<div class="page"><p class="note">Elige una unidad de Science.</p></div>'; fitPreview(); saveSettings(); return; }
+  if(mode()==='vocab'){ const h=renderVocab(); $('preview').innerHTML = h || '<div class="page"><p class="note">Elige un tema de vocabulario.</p></div>'; fitPreview(); saveSettings(); return; }
+  const tenses=[...document.querySelectorAll('#tenses input:checked')].map(c=>c.value);
+  const topics=tenses.concat([...document.querySelectorAll('#topics input:checked')].map(c=>c.value));
+  if(!titleEdited) $('title').value=autoTitle(topics);
+  document.body.className=$('theme').value;
+  const custom=parseCustom();
+  const acts=ACTS.filter(a=>document.querySelector(`[data-act="${a.id}"]`).checked)
+                 .map(a=>({a,n:Math.max(1,Math.min(20,+document.querySelector(`[data-n="${a.id}"]`).value||a.def))}));
+  const warn=[];
+  if(!topics.length) warn.push('Elige al menos un tema.');
+  if(topics.filter(t=>TENSES[t]||isCond(t)).length<2 && acts.some(x=>x.a.min2)) warn.push('«¿Qué tiempo / condicional es?» necesita 2 tiempos o condicionales.');
+  if(!tenses.length && acts.some(x=>x.a.needs==='tense')) warn.push('«Negativa y pregunta» y «Tabla de formas verbales» solo salen con tiempos verbales.');
+  $('actWarn').textContent=warn.join(' ');
+  const versions=+$('versions').value, seed=+$('seed').value||1;
+  let html='';
+  if(topics.length){
+    for(let v=0;v<versions;v++){
+      const res=buildVersion({tenses,topics,acts,custom,seed:seed+v*7919,label:versions>1?'Version '+'ABCD'[v]:''});
+      html+=res.ws; if($('optKey').checked) html+=res.key;
+    }
+  }
+  $('preview').innerHTML = html || '<div class="page"><p class="note">Selecciona tiempos verbales a la izquierda.</p></div>';
+  fitPreview(); saveSettings();
+}
+
+function buildVersion({tenses,topics,acts,custom,seed,label}){
+  const rng=mulberry(seed);
+  let base = $('onlyCustom').checked && custom.length ? custom : BANK.concat(custom);
+  let pool=base.filter(it=>tenses.includes(it.t));
+  if(tenses.length&&!pool.length) pool=BANK.filter(it=>tenses.includes(it.t));
+  pool=pool.concat(TPL.filter(it=>topics.includes(it.t)));
+  const queues={}; const used=new Set();
+  const refill=t=>{ queues[t]=shuffle(pool.filter(it=>it.t===t),rng); };
+  const ts=topics.filter(t=>pool.some(it=>it.t===t)); ts.forEach(refill);
+  let rr=Math.floor(rng()*ts.length);
+  const ctx={rng,tenses,topics,pool,
+    pick(n,filter=()=>true){
+      const out=[]; let guard=0;
+      while(out.length<n && guard++<n*40){
+        const t=ts[rr++%ts.length]; if(!queues[t].length) refill(t);
+        const idx=queues[t].findIndex(it=>filter(it)&&!out.includes(it));
+        if(idx<0) continue;
+        out.push(queues[t].splice(idx,1)[0]);
+      }
+      return shuffle(out,rng);
+    }};
+  const bi=$('lang').value==='enes', showScore=$('optScore').checked;
+  const school=$('school').value.trim(), title=$('title').value||'English grammar', sub=$('subtitle').value.trim();
+  let body='', keyHtml='', k=0;
+  for(const {a,n} of acts){
+    a._ins=null; a._insEs=null;
+    const r=a.gen.call(a,ctx,n); if(!r) continue; k++;
+    const nn=r.n||n;
+    const ins=(a._ins||a.en).replace('{n}',nn).replace('{L}',L[nn-1]);
+    body+=`<section class="act"><div class="act-h"><div class="num">${k}</div><div class="ins">${ins}${bi?`<span class="es">${a._insEs||a.esI}</span>`:''}</div>${showScore?`<div class="score">${icon('star','ic')} ____ / ${r.pts}</div>`:''}</div>${r.body}</section>`;
+    keyHtml+=`<div class="sec"><h3>${k}. ${a.es}</h3>${r.keyHtml||`<ol class="${r.one?'one':''}">${r.key.map(x=>`<li>${x}</li>`).join('')}</ol>`}</div>`;
+  }
+  const grammar=$('optGrammar').checked?`<div class="sect">${icon('book')}Let's learn!</div><div class="notes">${topics.map(theoryCard).join('')}</div>`:'';
+  return assemblePages({body,keyHtml,seed,label,theory:grammar});
+}
+
+function assemblePages({body,keyHtml,seed,label,theory}){
+  const school=$('school').value.trim(), title=$('title').value||'English', sub=$('subtitle').value.trim();
+  const pg='page'+($('size').value==='big'?' big':'')+($('optDots').checked?' dots':'');
+  const head=`<div class="hd"><div>${school?`<div class="school">${esc(school)}</div>`:''}<h1><span class="mark">${esc(title)}</span></h1>${sub?`<div class="subt">✎ ${esc(sub)}</div>`:''}</div><div class="hd-r">${label?`<div class="badge">${label}</div>`:''}${DOODLE}</div></div>`;
+  const student=$('optStudent').checked?`<div class="student"><div>Name:</div><div>Class:</div><div>Date:</div></div>`:'';
+  const practise=body?`<div class="sect">${icon('pencil')}Let's practise!</div>`:'';
+  const ed=$('optEdit').checked;
+  const ws=`<div class="${pg}" contenteditable="${ed}" spellcheck="false"><div class="ws">${head}${student}${theory||''}${practise}${body}<footer class="f">Code ${seed}</footer></div></div>`;
+  const key=`<div class="${pg}" contenteditable="${ed}" spellcheck="false"><div class="ws key"><div class="hd"><div><h1><span class="mark">Answer key${label?' · '+label:''}</span></h1><div class="subt">${esc(title)}</div></div></div>${keyHtml}<footer class="f">Code ${seed}</footer></div></div>`;
+  return {ws,key};
+}
+
+buildUI();
+/* =========================================================
+   VOCABULARY MODULE
+   words: [english, spanish, picture(emoji) or '']
+   ========================================================= */
+const VTOPICS = [
+ {id:'colours', en:'Colours', es:'Colores', lv:[1,3], note:'Mejor imprimiendo en color', words:[
+  ['red','rojo','🟥'],['blue','azul','🟦'],['yellow','amarillo','🟨'],['green','verde','🟩'],['orange','naranja','🟧'],['purple','morado','🟪'],['brown','marrón','🟫'],['black','negro','⬛'],['white','blanco','⬜'],['pink','rosa',''],['grey','gris','']]},
+ {id:'num20', en:'Numbers 1–20', es:'Números 1–20', lv:[1,2], gen:[1,20]},
+ {id:'num100', en:'Numbers to 100', es:'Números hasta 100', lv:[3,4], gen:[20,100]},
+ {id:'num1000', en:'Big numbers', es:'Números grandes (hasta 1000)', lv:[5,6], gen:[100,1000]},
+ {id:'ordinals', en:'Ordinal numbers', es:'Números ordinales', lv:[4,6], gen:[1,31], ord:true},
+ {id:'toys', en:'Toys', es:'Juguetes', lv:[1,2], words:[
+  ['ball','pelota','⚽'],['teddy bear','osito de peluche','🧸'],['kite','cometa','🪁'],['robot','robot','🤖'],['puzzle','puzle','🧩'],['balloon','globo','🎈'],['yo-yo','yoyó','🪀'],['drum','tambor','🥁'],['train','tren','🚂'],['car','coche','🚗'],['doll','muñeca','🪆'],['bike','bicicleta','🚲']]},
+ {id:'school', en:'School objects', es:'Objetos de clase', lv:[1,3], words:[
+  ['pencil','lápiz','✏️'],['pen','bolígrafo','🖊️'],['book','libro','📕'],['ruler','regla','📏'],['scissors','tijeras','✂️'],['schoolbag','mochila','🎒'],['crayon','cera','🖍️'],['notebook','cuaderno','📓'],['computer','ordenador','💻'],['clock','reloj','🕒'],['paintbrush','pincel','🖌️'],['chair','silla','🪑'],['door','puerta','🚪'],['teacher','profesor/a','🧑‍🏫']]},
+ {id:'family', en:'Family', es:'Familia', lv:[1,3], words:[
+  ['mother','madre','👩'],['father','padre','👨'],['sister','hermana','👧'],['brother','hermano','👦'],['grandmother','abuela','👵'],['grandfather','abuelo','👴'],['baby','bebé','👶'],['family','familia','👪'],['aunt','tía',''],['uncle','tío',''],['cousin','primo/a','']]},
+ {id:'body', en:'The body', es:'El cuerpo', lv:[1,3], words:[
+  ['eye','ojo','👁️'],['ear','oreja','👂'],['nose','nariz','👃'],['mouth','boca','👄'],['hand','mano','✋'],['foot','pie','🦶'],['leg','pierna','🦵'],['arm','brazo','💪'],['tooth','diente','🦷'],['tongue','lengua','👅'],['head','cabeza',''],['hair','pelo',''],['finger','dedo','☝️'],['brain','cerebro','🧠']]},
+ {id:'pets', en:'Pets & farm animals', es:'Mascotas y granja', lv:[1,3], words:[
+  ['dog','perro','🐶'],['cat','gato','🐱'],['fish','pez','🐟'],['bird','pájaro','🐦'],['rabbit','conejo','🐰'],['horse','caballo','🐴'],['cow','vaca','🐮'],['pig','cerdo','🐷'],['sheep','oveja','🐑'],['duck','pato','🦆'],['hen','gallina','🐔'],['mouse','ratón','🐭'],['frog','rana','🐸'],['hamster','hámster','🐹'],['turtle','tortuga','🐢'],['goat','cabra','🐐']]},
+ {id:'wild', en:'Wild animals', es:'Animales salvajes', lv:[2,6], words:[
+  ['lion','león','🦁'],['tiger','tigre','🐯'],['elephant','elefante','🐘'],['monkey','mono','🐵'],['giraffe','jirafa','🦒'],['zebra','cebra','🦓'],['bear','oso','🐻'],['snake','serpiente','🐍'],['crocodile','cocodrilo','🐊'],['kangaroo','canguro','🦘'],['penguin','pingüino','🐧'],['dolphin','delfín','🐬'],['shark','tiburón','🦈'],['whale','ballena','🐋'],['camel','camello','🐫'],['hippo','hipopótamo','🦛'],['owl','búho','🦉'],['eagle','águila','🦅'],['parrot','loro','🦜'],['octopus','pulpo','🐙'],['bat','murciélago','🦇'],['wolf','lobo','🐺'],['fox','zorro','🦊'],['butterfly','mariposa','🦋'],['spider','araña','🕷️'],['bee','abeja','🐝']]},
+ {id:'fruit', en:'Fruit & vegetables', es:'Frutas y verduras', lv:[1,4], words:[
+  ['apple','manzana','🍎'],['banana','plátano','🍌'],['orange','naranja','🍊'],['strawberry','fresa','🍓'],['grapes','uvas','🍇'],['watermelon','sandía','🍉'],['pear','pera','🍐'],['lemon','limón','🍋'],['cherry','cereza','🍒'],['pineapple','piña','🍍'],['carrot','zanahoria','🥕'],['tomato','tomate','🍅'],['potato','patata','🥔'],['onion','cebolla','🧅'],['mushroom','champiñón','🍄'],['corn','maíz','🌽'],['broccoli','brócoli','🥦'],['peach','melocotón','🍑']]},
+ {id:'food', en:'Food & drinks', es:'Comida y bebida', lv:[2,6], words:[
+  ['bread','pan','🍞'],['cheese','queso','🧀'],['egg','huevo','🥚'],['milk','leche','🥛'],['water','agua','💧'],['juice','zumo','🧃'],['rice','arroz','🍚'],['chicken','pollo','🍗'],['pizza','pizza','🍕'],['sandwich','sándwich','🥪'],['cake','tarta','🍰'],['ice cream','helado','🍦'],['chocolate','chocolate','🍫'],['biscuit','galleta','🍪'],['salad','ensalada','🥗'],['soup','sopa','🍲'],['honey','miel','🍯'],['burger','hamburguesa','🍔'],['chips','patatas fritas','🍟'],['sweets','caramelos','🍬'],['pasta','pasta','🍝'],['tea','té','🫖']]},
+ {id:'clothes', en:'Clothes', es:'Ropa', lv:[2,4], words:[
+  ['T-shirt','camiseta','👕'],['jeans','vaqueros','👖'],['dress','vestido','👗'],['coat','abrigo','🧥'],['scarf','bufanda','🧣'],['gloves','guantes','🧤'],['socks','calcetines','🧦'],['trainers','zapatillas','👟'],['boots','botas','👢'],['hat','sombrero','👒'],['cap','gorra','🧢'],['shorts','pantalón corto','🩳'],['glasses','gafas','👓'],['sunglasses','gafas de sol','🕶️'],['tie','corbata','👔'],['skirt','falda',''],['jumper','jersey','']]},
+ {id:'transport', en:'Transport', es:'Transportes', lv:[2,4], words:[
+  ['car','coche','🚗'],['bus','autobús','🚌'],['train','tren','🚆'],['plane','avión','✈️'],['boat','barca','⛵'],['ship','barco','🚢'],['bike','bicicleta','🚲'],['motorbike','moto','🏍️'],['helicopter','helicóptero','🚁'],['taxi','taxi','🚕'],['lorry','camión','🚚'],['tractor','tractor','🚜'],['rocket','cohete','🚀'],['scooter','patinete','🛴'],['underground','metro','🚇'],['ambulance','ambulancia','🚑']]},
+ {id:'days', en:'Days of the week', es:'Días de la semana', lv:[2,4], words:[
+  ['Monday','lunes',''],['Tuesday','martes',''],['Wednesday','miércoles',''],['Thursday','jueves',''],['Friday','viernes',''],['Saturday','sábado',''],['Sunday','domingo','']]},
+ {id:'months', en:'Months & seasons', es:'Meses y estaciones', lv:[2,5], words:[
+  ['January','enero',''],['February','febrero',''],['March','marzo',''],['April','abril',''],['May','mayo',''],['June','junio',''],['July','julio',''],['August','agosto',''],['September','septiembre',''],['October','octubre',''],['November','noviembre',''],['December','diciembre',''],['spring','primavera','🌸'],['summer','verano','🏖️'],['autumn','otoño','🍂'],['winter','invierno','⛄']]},
+ {id:'weather', en:'The weather', es:'El tiempo', lv:[2,4], words:[
+  ['sunny','soleado','☀️'],['rainy','lluvioso','🌧️'],['cloudy','nublado','☁️'],['snowy','nevado','🌨️'],['windy','ventoso','🌬️'],['stormy','tormentoso','⛈️'],['foggy','con niebla','🌫️'],['hot','caluroso','🥵'],['cold','frío','🥶'],['rainbow','arcoíris','🌈'],['umbrella','paraguas','☂️']]},
+ {id:'house', en:'The house', es:'La casa', lv:[2,4], words:[
+  ['house','casa','🏠'],['bed','cama','🛏️'],['sofa','sofá','🛋️'],['chair','silla','🪑'],['door','puerta','🚪'],['window','ventana','🪟'],['bath','bañera','🛁'],['shower','ducha','🚿'],['toilet','váter','🚽'],['lamp','lámpara','💡'],['mirror','espejo','🪞'],['television','televisión','📺'],['key','llave','🔑'],['garden','jardín','🏡'],['kitchen','cocina',''],['bedroom','dormitorio',''],['bathroom','cuarto de baño',''],['living room','salón','']]},
+ {id:'feelings', en:'Feelings', es:'Sentimientos', lv:[3,5], words:[
+  ['happy','feliz','😀'],['sad','triste','😢'],['angry','enfadado','😠'],['tired','cansado','😴'],['scared','asustado','😱'],['surprised','sorprendido','😮'],['bored','aburrido','🥱'],['hungry','hambriento','🤤'],['ill','enfermo','🤒'],['excited','emocionado','🤩'],['nervous','nervioso','😬'],['worried','preocupado','😟']]},
+ {id:'sports', en:'Sports & hobbies', es:'Deportes y aficiones', lv:[3,6], words:[
+  ['football','fútbol','⚽'],['basketball','baloncesto','🏀'],['tennis','tenis','🎾'],['swimming','natación','🏊'],['cycling','ciclismo','🚴'],['skiing','esquí','⛷️'],['running','correr','🏃'],['volleyball','voleibol','🏐'],['baseball','béisbol','⚾'],['golf','golf','⛳'],['skateboarding','monopatín','🛹'],['dancing','bailar','💃'],['reading','leer','📚'],['painting','pintar','🎨'],['singing','cantar','🎤'],['cooking','cocinar','🍳'],['fishing','pescar','🎣'],['surfing','surf','🏄'],['karate','kárate','🥋'],['horse riding','equitación','🏇'],['playing the guitar','tocar la guitarra','🎸'],['video games','videojuegos','🎮']]},
+ {id:'jobs', en:'Jobs', es:'Profesiones', lv:[4,6], words:[
+  ['doctor','médico/a','🧑‍⚕️'],['teacher','profesor/a','🧑‍🏫'],['police officer','policía','👮'],['firefighter','bombero/a','🧑‍🚒'],['cook','cocinero/a','🧑‍🍳'],['farmer','granjero/a','🧑‍🌾'],['pilot','piloto','🧑‍✈️'],['astronaut','astronauta','🧑‍🚀'],['scientist','científico/a','🧑‍🔬'],['mechanic','mecánico/a','🧑‍🔧'],['artist','artista','🧑‍🎨'],['singer','cantante','🧑‍🎤'],['judge','juez/a','🧑‍⚖️'],['builder','albañil','👷'],['vet','veterinario/a',''],['dentist','dentista',''],['waiter','camarero/a','']]},
+ {id:'town', en:'Places in town', es:'Lugares de la ciudad', lv:[4,6], words:[
+  ['school','colegio','🏫'],['hospital','hospital','🏥'],['bank','banco','🏦'],['park','parque','🏞️'],['supermarket','supermercado','🛒'],['cinema','cine','🎬'],['museum','museo','🏛️'],['post office','oficina de correos','🏤'],['church','iglesia','⛪'],['hotel','hotel','🏨'],['station','estación','🚉'],['airport','aeropuerto','🛫'],['restaurant','restaurante','🍽️'],['stadium','estadio','🏟️'],['factory','fábrica','🏭'],['castle','castillo','🏰'],['library','biblioteca',''],['bakery','panadería','🥐'],['swimming pool','piscina','']]},
+ {id:'adjectives', en:'Adjectives & opposites', es:'Adjetivos y contrarios', lv:[3,6], words:[
+  ['big','grande',''],['small','pequeño',''],['tall','alto',''],['short','bajo / corto',''],['long','largo',''],['fast','rápido',''],['slow','lento',''],['old','viejo',''],['new','nuevo',''],['young','joven',''],['clean','limpio',''],['dirty','sucio',''],['easy','fácil',''],['difficult','difícil',''],['heavy','pesado',''],['light','ligero',''],['loud','ruidoso',''],['quiet','silencioso',''],['expensive','caro',''],['cheap','barato',''],['strong','fuerte',''],['weak','débil',''],['beautiful','bonito',''],['ugly','feo','']]}
+];
+const VT = Object.fromEntries(VTOPICS.map(t=>[t.id,t]));
+/* =========================================================
+   SCIENCE (bilingual: Natural & Social Science in English)
+   glossary: [term, definition, spanish, emoji]
+   tf: [statement, true|false, correction]
+   cloze: sentences with {answer}
+   groups: {title:[items]}
+   ========================================================= */
+const SCTOPICS = [
+ {id:'living', en:'Living things', es:'Seres vivos', area:'Natural', lv:[1,3],
+  glossary:[['living thing','It is born, grows, feeds, reproduces and dies.','ser vivo','🌱'],['non-living thing','It is not born and it does not grow or feed.','ser inerte','🪨'],['nutrition','Living things take in food and water to live.','nutrición','🍎'],['interaction','Living things react to the world around them.','relación',''],['reproduction','Living things have babies or make seeds.','reproducción','🐣'],['grow','To get bigger.','crecer','📏'],['breathe','To take in air.','respirar','🌬️']],
+  tf:[['A rock is a living thing.',false,'A rock is a non-living thing.'],['Plants are living things.',true,''],['All living things need water.',true,''],['Non-living things grow.',false,'Non-living things do not grow.'],['Animals reproduce.',true,''],['A toy car feeds.',false,'A toy car is a non-living thing; it does not feed.']],
+  cloze:['A dog is a {living thing}.','A chair is a {non-living thing}.','Living things take in food. This is called {nutrition}.','Plants and animals {grow}: they get bigger.','Having babies is called {reproduction}.'],
+  groups:{'Living things':['tree','cat','mushroom','fish','flower','bird','baby'],'Non-living things':['rock','pencil','water','car','chair','book','sun']}},
+ {id:'plants', en:'Plants', es:'Las plantas', area:'Natural', lv:[1,5],
+  glossary:[['root','It holds the plant in the soil and takes in water.','raíz',''],['stem','It holds the plant up and carries water to the leaves.','tallo',''],['leaf','The plant makes its food here using sunlight.','hoja','🍃'],['flower','The part of the plant that makes seeds.','flor','🌸'],['fruit','It grows from the flower and protects the seeds.','fruto','🍎'],['seed','A new plant grows from it.','semilla','🌰'],['photosynthesis','How plants make their food with sunlight, water and air.','fotosíntesis','☀️'],['tree','A big plant with a thick, woody stem called a trunk.','árbol','🌳'],['bush','A plant with many thin woody stems.','arbusto','🌿'],['grass','A small plant with a soft, green stem.','hierba','🌾']],
+  tf:[['Roots take in water from the soil.',true,''],['Plants make their food in the flowers.',false,'Plants make their food in the leaves.'],['A new plant grows from a seed.',true,''],['Plants need sunlight to make food.',true,''],['A tree has a soft, green stem.',false,'A tree has a thick, woody stem (a trunk).'],['The fruit protects the seeds.',true,''],['Plants do not need water.',false,'Plants need water.']],
+  cloze:['The {roots} take in water and minerals from the soil.','The {stem} carries water to the leaves.','Plants make food in their {leaves}.','Plants make their food by {photosynthesis}.','The {fruit} protects the seeds.','A big plant with a trunk is a {tree}.'],
+  groups:{'Trees':['oak','pine','olive tree','palm tree'],'Bushes':['rosemary','lavender','rose bush','thyme'],'Herbaceous plants':['wheat','grass','mint','parsley']}},
+ {id:'animals', en:'Animals', es:'Los animales', area:'Natural', lv:[2,5],
+  glossary:[['vertebrate','An animal with a backbone.','vertebrado','🐟'],['invertebrate','An animal without a backbone.','invertebrado','🐛'],['mammal','A vertebrate with hair that feeds its babies with milk.','mamífero','🐄'],['bird','A vertebrate with feathers, wings and a beak.','ave','🐦'],['fish','A vertebrate that lives in water and has fins and gills.','pez','🐟'],['reptile','A vertebrate with dry skin and scales.','reptil','🦎'],['amphibian','A vertebrate that lives in water and on land.','anfibio','🐸'],['herbivore','An animal that only eats plants.','herbívoro','🐰'],['carnivore','An animal that only eats other animals.','carnívoro','🦁'],['omnivore','An animal that eats plants and animals.','omnívoro','🐻'],['oviparous','Animals that are born from eggs.','ovíparo','🥚'],['viviparous','Animals that are born from their mother\'s body.','vivíparo','']],
+  tf:[['A snake is a mammal.',false,'A snake is a reptile.'],['Birds have feathers.',true,''],['Insects are invertebrates.',true,''],['Fish breathe with lungs.',false,'Fish breathe with gills.'],['A cow is a herbivore.',true,''],['Frogs are amphibians.',true,''],['Mammals are oviparous.',false,'Most mammals are viviparous.'],['A lion is a carnivore.',true,'']],
+  cloze:['Animals with a backbone are {vertebrates}.','A {mammal} feeds its babies with milk.','A frog is an {amphibian}.','A rabbit only eats plants. It is a {herbivore}.','Birds are {oviparous}: they are born from eggs.','A spider is an {invertebrate}.'],
+  groups:{'Mammals':['dog','whale','bat','cow'],'Birds':['eagle','penguin','parrot','hen'],'Fish':['shark','tuna','salmon','sardine'],'Reptiles':['snake','lizard','turtle','crocodile'],'Amphibians':['frog','toad','salamander','newt']}},
+ {id:'body', en:'The human body', es:'El cuerpo humano', area:'Natural', lv:[1,6],
+  glossary:[['skeleton','All the bones of the body together.','esqueleto','💀'],['bone','A hard part inside the body that gives it shape.','hueso','🦴'],['muscle','It moves the bones.','músculo','💪'],['joint','The place where two bones meet, like the knee.','articulación',''],['skull','The bones that protect the brain.','cráneo',''],['heart','It pumps blood around the body.','corazón','🫀'],['lungs','We use them to breathe.','pulmones','🫁'],['stomach','Food goes here after we swallow it.','estómago',''],['brain','It controls the whole body.','cerebro','🧠'],['blood','A red liquid that carries oxygen and food around the body.','sangre','🩸']],
+  tf:[['Muscles move the bones.',true,''],['The heart helps us breathe.',false,'The lungs help us breathe; the heart pumps blood.'],['The skull protects the brain.',true,''],['The knee is a joint.',true,''],['Bones are soft.',false,'Bones are hard.'],['The brain controls the body.',true,''],['Food goes to the lungs.',false,'Food goes to the stomach.']],
+  cloze:['All our bones together make the {skeleton}.','The {heart} pumps blood around the body.','We breathe with our {lungs}.','{Muscles} move our bones.','The {skull} protects the brain.','The elbow is a {joint}.'],
+  groups:{'Skeleton (bones)':['skull','ribs','spine','femur'],'Organs':['heart','lungs','stomach','brain'],'Joints':['knee','elbow','shoulder','wrist']}},
+ {id:'senses', en:'The five senses', es:'Los cinco sentidos', area:'Natural', lv:[1,3],
+  glossary:[['sight','We see with our eyes.','vista','👁️'],['hearing','We hear with our ears.','oído','👂'],['smell','We smell with our nose.','olfato','👃'],['taste','We taste with our tongue.','gusto','👅'],['touch','We feel with our skin.','tacto','✋']],
+  tf:[['We hear with our nose.',false,'We hear with our ears.'],['We taste with our tongue.',true,''],['We feel with our skin.',true,''],['We see with our ears.',false,'We see with our eyes.'],['We have five senses.',true,'']],
+  cloze:['We use our eyes for {sight}.','Our tongue is for {taste}.','We use our skin for {touch}.','Our nose is for {smell}.','Our ears are for {hearing}.'],
+  groups:{'Sight':['colours','a rainbow','a book'],'Hearing':['music','a bell','a bird singing'],'Smell':['flowers','perfume','smoke'],'Taste':['sweet','salty','sour'],'Touch':['hot','soft','rough']}},
+ {id:'health', en:'Healthy habits', es:'Hábitos saludables', area:'Natural', lv:[2,4],
+  glossary:[['balanced diet','Eating different healthy foods every day.','dieta equilibrada','🥗'],['exercise','Moving your body, like running or swimming.','ejercicio','🏃'],['hygiene','Keeping your body clean.','higiene','🧼'],['sleep','Resting at night. Children need 9 to 11 hours.','dormir','😴'],['water','We need to drink it every day.','agua','💧'],['germs','Very small living things that can make us ill.','gérmenes','🦠']],
+  tf:[['We should brush our teeth after meals.',true,''],['Sweets are good to eat every day.',false,'We should eat sweets only sometimes.'],['Exercise is good for our body.',true,''],['Children need two hours of sleep.',false,'Children need 9 to 11 hours of sleep.'],['Washing your hands stops germs.',true,'']],
+  cloze:['Eating different healthy foods is a {balanced diet}.','Running and swimming are types of {exercise}.','Washing your body is good {hygiene}.','{Germs} can make us ill.'],
+  groups:{'Healthy habits':['eating fruit','sleeping well','playing sport','washing hands'],'Unhealthy habits':['eating lots of sweets','watching TV all day','not brushing teeth','going to bed very late']}},
+ {id:'ecosystems', en:'Ecosystems', es:'Los ecosistemas', area:'Natural', lv:[4,6],
+  glossary:[['ecosystem','Living things and the place where they live, working together.','ecosistema','🌍'],['habitat','The natural home of a living thing.','hábitat','🏡'],['food chain','It shows what eats what in an ecosystem.','cadena alimentaria','🔗'],['producer','A living thing that makes its own food, like a plant.','productor','🌿'],['consumer','A living thing that eats other living things.','consumidor','🐇'],['decomposer','It breaks down dead plants and animals, like fungi.','descomponedor','🍄'],['predator','An animal that hunts other animals.','depredador','🦊'],['prey','An animal that is hunted by others.','presa','🐭']],
+  tf:[['Plants are producers.',true,''],['Fungi are predators.',false,'Fungi are decomposers.'],['A habitat is the home of a living thing.',true,''],['Consumers make their own food.',false,'Producers make their own food.'],['A food chain starts with a producer.',true,'']],
+  cloze:['Plants make their own food: they are {producers}.','A fox hunts rabbits. The fox is a {predator}.','Mushrooms are {decomposers}.','A {food chain} shows what eats what.','A pond is an {ecosystem}.'],
+  groups:{'Producers':['grass','oak tree','seaweed','sunflower'],'Consumers':['rabbit','fox','eagle','grasshopper'],'Decomposers':['mushroom','mould','bacteria','earthworm']}},
+ {id:'matter', en:'Matter & materials', es:'La materia y los materiales', area:'Natural', lv:[3,6],
+  glossary:[['matter','Everything that has mass and takes up space.','materia',''],['solid','It has a fixed shape, like ice.','sólido','🧊'],['liquid','It takes the shape of its container, like water.','líquido','💧'],['gas','It spreads out to fill any space, like air.','gas','💨'],['melt','To change from solid to liquid.','fundir / derretir','🫠'],['freeze','To change from liquid to solid.','congelar','❄️'],['evaporate','To change from liquid to gas.','evaporar','♨️'],['mixture','Two or more materials put together.','mezcla','🥣'],['magnetic','A material that a magnet attracts, like iron.','magnético','🧲']],
+  tf:[['Ice is a solid.',true,''],['Water is a gas.',false,'Water is a liquid.'],['When ice melts, it becomes a liquid.',true,''],['A liquid has a fixed shape.',false,'A solid has a fixed shape.'],['Magnets attract iron.',true,''],['Water evaporates when it gets hot.',true,'']],
+  cloze:['Ice is a {solid}.','When ice gets warm, it {melts}.','Air is a {gas}.','When water gets very cold, it {freezes}.','Salt and water together are a {mixture}.','Iron is {magnetic}.'],
+  groups:{'Solids':['ice','wood','stone','coin'],'Liquids':['water','milk','oil','juice'],'Gases':['air','steam','oxygen','smoke']}},
+ {id:'energy', en:'Energy', es:'La energía', area:'Natural', lv:[5,6],
+  glossary:[['energy','What makes things move, change or work.','energía','⚡'],['renewable','Energy that never runs out, like the sun or wind.','renovable','♻️'],['non-renewable','Energy that will run out one day, like oil.','no renovable','🛢️'],['solar energy','Energy from the sun.','energía solar','☀️'],['wind energy','Energy from the wind.','energía eólica','🌬️'],['electricity','Energy that makes lights and machines work.','electricidad','💡'],['heat','Energy that makes things warmer.','calor','🔥'],['fossil fuels','Coal, oil and gas: they come from very old living things.','combustibles fósiles','⛽']],
+  tf:[['Solar energy is renewable.',true,''],['Oil is a renewable energy.',false,'Oil is non-renewable.'],['Wind can make electricity.',true,''],['Fossil fuels will never run out.',false,'Fossil fuels will run out one day.'],['Heat is a form of energy.',true,'']],
+  cloze:['Energy from the sun is {solar energy}.','The wind is a {renewable} energy source.','Coal and oil are {fossil fuels}.','A lamp needs {electricity} to work.'],
+  groups:{'Renewable':['sun','wind','water','biomass'],'Non-renewable':['oil','coal','natural gas','uranium']}},
+ {id:'forces', en:'Forces & machines', es:'Fuerzas y máquinas', area:'Natural', lv:[3,6],
+  glossary:[['force','A push or a pull.','fuerza','👐'],['push','To move something away from you.','empujar',''],['pull','To move something towards you.','tirar',''],['gravity','The force that pulls things down to the ground.','gravedad','🍎'],['friction','A force that slows things down when they rub.','rozamiento',''],['lever','A bar that moves on a fixed point to lift things.','palanca',''],['pulley','A wheel with a rope to lift heavy things.','polea',''],['wheel','A round object that turns to move things easily.','rueda','🛞'],['ramp','A slope that helps us move things up.','rampa','']],
+  tf:[['A force is a push or a pull.',true,''],['Gravity pulls things up.',false,'Gravity pulls things down.'],['A pulley helps us lift heavy things.',true,''],['Friction makes things go faster.',false,'Friction slows things down.'],['Scissors are a type of lever.',true,'']],
+  cloze:['Opening a door is a {push} or a {pull}.','{Gravity} makes an apple fall from a tree.','A {pulley} uses a rope and a wheel.','A seesaw is a {lever}.'],
+  groups:{'Push':['kicking a ball','closing a drawer','pushing a trolley'],'Pull':['opening a drawer','pulling a rope','pulling a dog\'s lead']}},
+ {id:'space', en:'The Solar System', es:'El sistema solar', area:'Social', lv:[3,6],
+  glossary:[['Sun','The star in the centre of the Solar System.','Sol','☀️'],['planet','A big round object that moves around a star.','planeta','🪐'],['Moon','It moves around the Earth.','Luna','🌙'],['star','A huge ball of hot gas that gives light.','estrella','⭐'],['orbit','The path of a planet around the Sun.','órbita',''],['rotation','The Earth turns on its axis. It takes 24 hours: day and night.','rotación','🔄'],['revolution','The Earth moves around the Sun. It takes 365 days: a year.','traslación',''],['astronaut','A person who travels into space.','astronauta','🧑‍🚀']],
+  tf:[['The Sun is a star.',true,''],['The Moon moves around the Sun.',false,'The Moon moves around the Earth.'],['There are eight planets in the Solar System.',true,''],['Rotation gives us the seasons.',false,'Rotation gives us day and night.'],['Revolution takes about 365 days.',true,''],['Jupiter is the biggest planet.',true,'']],
+  cloze:['The {Sun} is in the centre of the Solar System.','The Earth turns on its axis. This is {rotation}.','The Earth moves around the Sun. This is {revolution}.','The {Moon} moves around the Earth.','Mars is a {planet}.'],
+  groups:{'Inner planets':['Mercury','Venus','Earth','Mars'],'Outer planets':['Jupiter','Saturn','Uranus','Neptune']}},
+ {id:'landscapes', en:'Landscapes & water', es:'Paisajes y agua', area:'Social', lv:[3,6],
+  glossary:[['mountain','A very high area of land.','montaña','⛰️'],['valley','Low land between mountains.','valle',''],['river','Fresh water that flows to the sea.','río','🏞️'],['coast','Land next to the sea.','costa','🏖️'],['island','Land with water all around it.','isla','🏝️'],['beach','Sand or stones next to the sea.','playa','🏖️'],['lake','A big area of water with land all around it.','lago',''],['water cycle','How water moves: evaporation, condensation, precipitation.','ciclo del agua','💧'],['evaporation','Water changes into water vapour because of the sun.','evaporación','☀️'],['precipitation','Water falls from clouds as rain, snow or hail.','precipitación','🌧️']],
+  tf:[['An island has water all around it.',true,''],['A valley is very high land.',false,'A valley is low land between mountains.'],['Rivers flow to the sea.',true,''],['Rain is a type of precipitation.',true,''],['A lake is next to the sea.',false,'A lake has land all around it.']],
+  cloze:['Land with water all around it is an {island}.','The Guadalquivir is a {river}.','Mulhacén is a very high {mountain}.','Rain and snow are types of {precipitation}.','Water changes into vapour in {evaporation}.'],
+  groups:{'Inland landscape':['mountain','valley','river','lake'],'Coastal landscape':['beach','cliff','bay','island']}},
+ {id:'andalucia', en:'Andalusia', es:'Andalucía', area:'Social', lv:[3,6],
+  glossary:[['Seville','The capital of Andalusia.','Sevilla',''],['province','A part of a region. Andalusia has eight.','provincia',''],['Guadalquivir','The most important river in Andalusia.','Guadalquivir','🏞️'],['Sierra Nevada','Mountains in Granada with the highest peak in mainland Spain.','Sierra Nevada','🏔️'],['Mediterranean Sea','The sea on the south and east coast.','mar Mediterráneo','🌊'],['Atlantic Ocean','The ocean on the west coast of Andalusia.','océano Atlántico','🌊'],['Doñana','A famous national park in Huelva.','Doñana','🦩']],
+  tf:[['Seville is the capital of Andalusia.',true,''],['Andalusia has ten provinces.',false,'Andalusia has eight provinces.'],['The Guadalquivir flows through Seville.',true,''],['Sierra Nevada is in Granada.',true,''],['Doñana is in Jaén.',false,'Doñana is in Huelva.']],
+  cloze:['The capital of Andalusia is {Seville}.','Andalusia has eight {provinces}.','The most important river is the {Guadalquivir}.','{Doñana} is a national park in Huelva.'],
+  groups:{'Coastal provinces':['Huelva','Cádiz','Málaga','Granada','Almería'],'Inland provinces':['Seville','Córdoba','Jaén']}}
+];
+const SCT = Object.fromEntries(SCTOPICS.map(t=>[t.id,t]));
+function scienceWords(ids){
+  const out=[];
+  ids.forEach(id=>{ const t=SCT[id]; if(!t) return; t.glossary.forEach(g=>out.push({en:g[0],def:g[1],es:g[2],pic:g[3]||'',topic:id})); });
+  return out;
+}
+
+const SACTS_EXTRA = [
+ {id:'scloze', es:'Completar con palabras', def:6, on:true,
+  en:'Complete the sentences with the words in the box.', esI:'Completa las frases con las palabras del recuadro.',
+  gen(ctx,n){
+    let items=[]; ctx.topics.forEach(id=>SCT[id].cloze.forEach(c=>items.push(c)));
+    items=shuffle(items,ctx.rng).slice(0,n); if(!items.length) return null;
+    const answers=[], rows=items.map(c=>c.replace(/\{([^}]+)\}/g,(m,a)=>{ answers.push(a); return GAP; }));
+    const bank=shuffle([...new Set(answers)],ctx.rng);
+    const keys=items.map(c=>[...c.matchAll(/\{([^}]+)\}/g)].map(m=>`<b>${esc(m[1])}</b>`).join(' · '));
+    return {body:`<div class="bank">${bank.map(w=>`<span>${esc(w)}</span>`).join('')}</div><ol class="items">${rows.map(r=>`<li>${r}</li>`).join('')}</ol>`, key:keys, pts:answers.length};
+  }},
+ {id:'stf', es:'Verdadero o falso', def:6, on:true,
+  en:'True (T) or false (F)? Correct the false sentences.', esI:'¿Verdadero (T) o falso (F)? Corrige las frases falsas.',
+  gen(ctx,n){
+    let items=[]; ctx.topics.forEach(id=>SCT[id].tf.forEach(x=>items.push(x)));
+    items=shuffle(items,ctx.rng).slice(0,n); if(!items.length) return null;
+    const rows=items.map(x=>`${esc(x[0])} <span class="tfbox">T</span><span class="tfbox">F</span>${x[1]?'':''}<div class="wline"></div>`);
+    const keys=items.map(x=>x[1]?'<b>T</b>':`<b>F</b> – ${esc(x[2])}`);
+    return {body:`<ol class="items">${rows.map(r=>`<li>${r}</li>`).join('')}</ol>`, key:keys, pts:items.length, one:true};
+  }},
+ {id:'sclassify', es:'Clasificar', def:12, on:true,
+  en:'Classify the words. Write them in the correct column.', esI:'Clasifica las palabras. Escríbelas en la columna correcta.',
+  gen(ctx,n){
+    const withG=ctx.topics.filter(id=>SCT[id].groups); if(!withG.length) return null;
+    const id=withG[Math.floor(ctx.rng()*withG.length)], G=SCT[id].groups, cols=Object.keys(G).slice(0,5);
+    const per=Math.max(2,Math.floor(n/cols.length));
+    const chosen=cols.map(c=>[c,shuffle(G[c],ctx.rng).slice(0,per)]);
+    const all=shuffle(chosen.flatMap(c=>c[1]),ctx.rng);
+    const table=fill=>`<table class="cls"><tr>${chosen.map(c=>`<th>${esc(c[0])}</th>`).join('')}</tr><tr>${chosen.map(c=>`<td>${fill?c[1].map(esc).join('<br>'):''}</td>`).join('')}</tr></table>`;
+    return {body:`<div class="bank">${all.map(w=>`<span>${esc(w)}</span>`).join('')}</div>${table(false)}`, keyHtml:table(true), pts:all.length};
+  }}
+];
+
+
+/* number words */
+const ONES=['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+const TENS=['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+function numWords(n){
+  if(n<20) return ONES[n];
+  if(n<100) return TENS[Math.floor(n/10)]+(n%10?'-'+ONES[n%10]:'');
+  if(n<1000){ const r=n%100; return ONES[Math.floor(n/100)]+' hundred'+(r?' and '+numWords(r):''); }
+  return 'one thousand';
+}
+function ordWords(n){
+  const w=numWords(n), parts=w.split('-'), last=parts.pop();
+  const map={one:'first',two:'second',three:'third',five:'fifth',eight:'eighth',nine:'ninth',twelve:'twelfth'};
+  let o = map[last] || (last.endsWith('y') ? last.slice(0,-1)+'ieth' : last+'th');
+  return parts.concat(o).join('-');
+}
+const ordSuffix = n => n+(n%100>=11&&n%100<=13?'th':({1:'st',2:'nd',3:'rd'}[n%10]||'th'));
+
+/* support: 'pic' | 'es' | 'both' */
+function clueHtml(w,mode){
+  if(mode==='def'&&w.def) return `<span class="def">${esc(w.def)}</span>`;
+  if(w.num) return `<span class="pic nm">${esc(w.pic)}</span>`;
+  const pic = w.pic && mode!=='es' ? `<span class="pic">${w.pic}</span>` : '';
+  const es = (!w.pic || mode!=='pic') ? `<span class="es-w">${esc(w.es)}</span>` : '';
+  return pic+es;
+}
+const lettersOnly = s => s.toUpperCase().replace(/[^A-Z]/g,'');
+const isSimple = w => /^[A-Za-z]+$/.test(w.en);
+
+const VACTS = [
+ {id:'vmatch', es:'Unir', def:8, on:true,
+  en:'Match the pictures with the words.', esI:'Une los dibujos con las palabras.',
+  gen(ctx,n){
+    const ws=ctx.pick(Math.min(n,12)); if(ws.length<2) return null;
+    if(ctx.mode==='def'){ this._ins='Match the definitions with the words.'; this._insEs='Une las definiciones con las palabras.'; }
+    if(ctx.mode==='es'){ this._ins='Match the Spanish words with the English words.'; this._insEs='Une las palabras en español con las palabras en inglés.'; }
+    if(ws.every(w=>w.num)){ this._ins='Match the numbers with the words.'; this._insEs='Une los números con las palabras.'; }
+    const order=shuffle(ws.map((_,i)=>i),ctx.rng);
+    const left=`<ol>${ws.map(w=>`<li><span class="clue">${clueHtml(w,ctx.mode)}</span> <span class="mbox"></span></li>`).join('')}</ol>`;
+    const right=`<ul>${order.map((wi,j)=>`<li><b>${L[j]})</b> ${esc(ws[wi].en)}</li>`).join('')}</ul>`;
+    return {body:`<div class="match vmatch">${left}${right}</div>`, key:ws.map((w,i)=>`<b>${L[order.indexOf(i)]}</b> – ${esc(w.en)}`), pts:ws.length};
+  }},
+ {id:'vwrite', es:'Mirar y escribir', def:8, on:true,
+  en:'Look and write the word.', esI:'Mira y escribe la palabra.',
+  gen(ctx,n){
+    const ws=ctx.pick(n); if(!ws.length) return null;
+    const rows=ws.map(w=>{
+      if(w.en.length>14) return `<li class="vrow"><span class="clue">${clueHtml(w,ctx.mode)}</span><span class="wline" style="flex:1;min-width:60mm"></span></li>`;
+      const boxes=[...w.en].map((ch,i)=> ch===' ' ? '<span class="lb sp"></span>' : /[-']/.test(ch) ? `<span class="lb pun">${ch}</span>` : `<span class="lb">${ctx.lv<=2&&i===0?esc(ch):''}</span>`).join('');
+      return `<li class="vrow"><span class="clue">${clueHtml(w,ctx.mode)}</span><span class="boxes">${boxes}</span></li>`;
+    });
+    if(ctx.mode==='def'){ this._ins='Read and write the word.'; this._insEs='Lee y escribe la palabra.'; }
+    return {body:`<ol class="items vgrid${ctx.mode==='def'?' one':''}">${rows.join('')}</ol>`, key:ws.map(w=>esc(w.en)), pts:ws.length};
+  }},
+ {id:'vchoose', es:'Elegir la palabra', def:6, on:false,
+  en:'Look and circle the correct word.', esI:'Mira y rodea la palabra correcta.',
+  gen(ctx,n){
+    const ws=ctx.pick(n); if(!ws.length) return null;
+    const rows=ws.map(w=>{
+      const others=shuffle(ctx.all.filter(o=>o.en!==w.en&&(o.topic===w.topic)),ctx.rng).slice(0,2);
+      if(others.length<2) others.push(...shuffle(ctx.all.filter(o=>o.en!==w.en&&!others.includes(o)),ctx.rng).slice(0,2-others.length));
+      const opts=shuffle([w,...others],ctx.rng);
+      return `<li class="vrow"><span class="clue">${clueHtml(w,ctx.mode)}</span><span class="opts">${opts.map(o=>`<span class="circ">${esc(o.en)}</span>`).join('')}</span></li>`;
+    });
+    if(ctx.mode==='def'){ this._ins='Read and circle the correct word.'; this._insEs='Lee y rodea la palabra correcta.'; }
+    return {body:`<ol class="items vgrid${ctx.mode==='def'?' one':''}">${rows.join('')}</ol>`, key:ws.map(w=>esc(w.en)), pts:ws.length};
+  }},
+ {id:'vmissing', es:'Letras que faltan', def:8, on:true,
+  en:'Complete the words with the missing letters.', esI:'Completa las palabras con las letras que faltan.',
+  gen(ctx,n){
+    const ws=ctx.pick(n,w=>lettersOnly(w.en).length>=3&&w.en.length<=14); if(!ws.length) return null;
+    const frac=ctx.lv<=2?0.25:ctx.lv<=4?0.4:0.55;
+    const rows=ws.map(w=>{
+      const idx=[...w.en].map((c,i)=>/[a-z]/i.test(c)?i:-1).filter(i=>i>=0);
+      const k=Math.max(1,Math.min(idx.length-1,Math.round(idx.length*frac)));
+      const hide=new Set(shuffle(idx,ctx.rng).slice(0,k));
+      const shown=[...w.en].map((c,i)=>hide.has(i)?'<span class="ml"></span>':c===' '?'&nbsp;&nbsp;':esc(c)).join('');
+      return `<li class="vrow"><span class="clue">${clueHtml(w,ctx.mode)}</span><span class="missing">${shown}</span></li>`;
+    });
+    if(ctx.mode==='def'){ this._ins='Read and complete the words.'; this._insEs='Lee y completa las palabras.'; }
+    return {body:`<ol class="items vgrid${ctx.mode==='def'?' one':''}">${rows.join('')}</ol>`, key:ws.map(w=>esc(w.en)), pts:ws.length};
+  }},
+ {id:'vscramble', es:'Letras desordenadas', def:6, on:true,
+  en:'Put the letters in order and write the word.', esI:'Ordena las letras y escribe la palabra.',
+  gen(ctx,n){
+    const ws=ctx.pick(n,w=>isSimple(w)&&w.en.length>=3); if(!ws.length) return null;
+    const rows=ws.map(w=>{
+      const l=w.en.toLowerCase().split(''); let s=shuffle(l,ctx.rng),t=0; while(s.join('')===l.join('')&&t++<10) s=shuffle(l,ctx.rng);
+      return `<li class="vrow"><span class="clue">${clueHtml(w,ctx.mode)}</span><span><span class="scr">${s.join(' ')}</span><span class="wline sm"></span></span></li>`;
+    });
+    return {body:`<ol class="items vgrid">${rows.join('')}</ol>`, key:ws.map(w=>esc(w.en)), pts:ws.length};
+  }},
+ {id:'vsearch', es:'Sopa de letras', def:8, on:true,
+  en:'Find the words in the word search.', esI:'Busca las palabras en la sopa de letras.',
+  gen(ctx,n){
+    const ws=ctx.pick(Math.min(n,14),w=>lettersOnly(w.en).length>=2);
+    if(!ws.length) return null;
+    const size=Math.max(ctx.lv<=2?8:ctx.lv<=4?10:12, ...ws.map(w=>lettersOnly(w.en).length));
+    const dirs=[[0,1],[1,0]].concat(ctx.lv>=3?[[1,1]]:[]).concat(ctx.lv>=5?[[0,-1],[-1,0],[-1,1]]:[]);
+    const g=Array.from({length:size},()=>Array(size).fill('')), hit=new Set(), placed=[];
+    for(const w of [...ws].sort((a,b)=>lettersOnly(b.en).length-lettersOnly(a.en).length)){
+      const s=lettersOnly(w.en); let ok=false;
+      for(let t=0;t<400&&!ok;t++){
+        const [dr,dc]=dirs[Math.floor(ctx.rng()*dirs.length)], r0=Math.floor(ctx.rng()*size), c0=Math.floor(ctx.rng()*size);
+        const er=r0+dr*(s.length-1), ec=c0+dc*(s.length-1); if(er<0||er>=size||ec<0||ec>=size) continue;
+        let fit=true; for(let i=0;i<s.length;i++){ const ch=g[r0+dr*i][c0+dc*i]; if(ch&&ch!==s[i]){fit=false;break;} }
+        if(!fit) continue;
+        for(let i=0;i<s.length;i++){ g[r0+dr*i][c0+dc*i]=s[i]; hit.add((r0+dr*i)+','+(c0+dc*i)); }
+        ok=true; placed.push(w);
+      }
+    }
+    const AZ='ABCDEFGHIJKLMNOPRSTUWY';
+    const full=g.map(row=>row.map(ch=>ch||AZ[Math.floor(ctx.rng()*AZ.length)]));
+    const table=(key)=>`<table class="wsg">${full.map((row,r)=>`<tr>${row.map((ch,c)=>`<td class="${key&&hit.has(r+','+c)?'on':''}">${ch}</td>`).join('')}</tr>`).join('')}</table>`;
+    const lm=ctx.mode==='es'||ctx.mode==='def'?'pic':ctx.mode;
+    const list=`<div class="wlist">${ws.filter(w=>placed.includes(w)).map(w=>`<span>${w.num||w.pic&&lm==='pic'||lm==='both'?(w.pic||w.num?clueHtml(w,'pic'):''):''} ${esc(w.en)}</span>`).join('')}</div>`;
+    return {body:`<div class="wsbox">${table(false)}${list}</div>`, keyHtml:`<div class="wsbox key">${table(true)}</div>`, pts:placed.length};
+  }},
+ {id:'vcross', es:'Crucigrama', def:8, on:true,
+  en:'Look at the clues and complete the crossword.', esI:'Mira las pistas y completa el crucigrama.',
+  gen(ctx,n){
+    const cand=[]; const seen=new Set();
+    for(const w of ctx.pick(Math.min(n,12)*2,w=>lettersOnly(w.en).length>=3)){ const s=lettersOnly(w.en); if(!seen.has(s)){seen.add(s);cand.push(w);} }
+    const cw=crossword(cand.slice(0,Math.min(n,12)),ctx.rng); if(!cw||cw.words.length<2) return null;
+    const {cells,words,rows,cols}=cw;
+    const cell=Math.min(8.5,165/cols);
+    const table=(key)=>`<table class="cwg" style="--cell:${cell.toFixed(2)}mm">${Array.from({length:rows},(_,r)=>`<tr>${Array.from({length:cols},(_,c)=>{const k=r+','+c, ch=cells.get(k); if(!ch) return '<td class="x"></td>'; const num=words.find(w=>w.r===r&&w.c===c); return `<td>${num?`<sup>${num.n}</sup>`:''}${key?ch:''}</td>`;}).join('')}</tr>`).join('')}</table>`;
+    const clueList=(dir,label)=>{ const ws=words.filter(w=>w.dir===dir); if(!ws.length) return ''; return `<div class="cclues"><h4>${label}</h4>${ws.map(w=>`<div><b>${w.n}</b> ${clueHtml(w.w,ctx.mode)} <span class="hint">(${w.s.length})</span></div>`).join('')}</div>`; };
+    if(ctx.mode==='def'){ this._ins='Read the clues and complete the crossword.'; this._insEs='Lee las pistas y completa el crucigrama.'; }
+    return {body:`<div class="cwbox${ctx.mode==='def'?' defs':''}">${table(false)}<div class="cclues-wrap">${clueList('a','Across →')}${clueList('d','Down ↓')}</div></div>`, keyHtml:`<div class="cwbox key">${table(true)}</div>`, pts:words.length};
+  }}
+];
+
+function crossword(list,rng){
+  const items=list.map(w=>({w,s:lettersOnly(w.en)})).sort((a,b)=>b.s.length-a.s.length);
+  if(!items.length) return null;
+  const cells=new Map(), placed=[];
+  const get=(r,c)=>cells.get(r+','+c);
+  const put=(it,r,c,dir)=>{ for(let i=0;i<it.s.length;i++){ cells.set((dir==='a'?r:r+i)+','+(dir==='a'?c+i:c),it.s[i]); } placed.push({...it,r,c,dir}); };
+  const check=(s,r,c,dir)=>{
+    const dr=dir==='d'?1:0, dc=dir==='a'?1:0; let inter=0;
+    if(get(r-dr,c-dc)||get(r+dr*s.length,c+dc*s.length)) return -1;
+    for(let i=0;i<s.length;i++){
+      const rr=r+dr*i, cc=c+dc*i, ch=get(rr,cc);
+      if(ch){ if(ch!==s[i]) return -1; inter++; }
+      else if(get(rr+dc,cc+dr)||get(rr-dc,cc-dr)) return -1;
+    }
+    return inter;
+  };
+  put(items[0],0,0,'a');
+  let rest=items.slice(1);
+  for(let pass=0;pass<2;pass++){
+    const left=[];
+    for(const it of rest){
+      let best=null;
+      for(const p of placed) for(let i=0;i<p.s.length;i++) for(let j=0;j<it.s.length;j++){
+        if(p.s[i]!==it.s[j]) continue;
+        const dir=p.dir==='a'?'d':'a';
+        const r=p.dir==='a'? p.r-j : p.r+i, c=p.dir==='a'? p.c+i : p.c-j;
+        const sc=check(it.s,r,c,dir);
+        if(sc>0){ const v=sc+rng()*0.5; if(!best||v>best.v) best={r,c,dir,v}; }
+      }
+      if(best) put(it,best.r,best.c,best.dir); else left.push(it);
+    }
+    rest=left; if(!rest.length) break;
+  }
+  let minR=Infinity,minC=Infinity,maxR=-Infinity,maxC=-Infinity;
+  for(const k of cells.keys()){ const [r,c]=k.split(',').map(Number); minR=Math.min(minR,r);maxR=Math.max(maxR,r);minC=Math.min(minC,c);maxC=Math.max(maxC,c); }
+  const nc=new Map(); for(const [k,v] of cells){ const [r,c]=k.split(',').map(Number); nc.set((r-minR)+','+(c-minC),v); }
+  const ws=placed.map(p=>({...p,r:p.r-minR,c:p.c-minC})).sort((a,b)=>a.r-b.r||a.c-b.c);
+  let n=0; const starts={};
+  ws.forEach(w=>{ const k=w.r+','+w.c; if(!starts[k]) starts[k]=++n; w.n=starts[k]; });
+  return {cells:nc,words:ws,rows:maxR-minR+1,cols:maxC-minC+1};
+}
+
+function vocabWords(topicIds,rng,lv){
+  const out=[];
+  topicIds.forEach(id=>{
+    const t=VT[id]; if(!t) return;
+    if(t.gen){
+      const [a,b]=t.gen, nums=new Set();
+      if(id==='num20') for(let i=1;i<=20;i++) nums.add(i);
+      else { let guard=0; while(nums.size<24&&guard++<500){ let x=a+Math.floor(rng()*(b-a+1)); if(id==='num100'&&rng()<0.25) x=Math.floor(x/10)*10||20; nums.add(x);} }
+      [...nums].forEach(x=>out.push(t.ord?{en:ordWords(x),es:ordSuffix(x),pic:ordSuffix(x),num:true,topic:id}:{en:numWords(x),es:String(x),pic:String(x),num:true,topic:id}));
+    } else t.words.forEach(w=>out.push({en:w[0],es:w[1],pic:w[2]||'',topic:id}));
+  });
+  return out;
+}
+
+function buildVocabVersion({vtopics,vacts,seed,label,lv,mode,subject}){
+  const rng=mulberry(seed);
+  const all=subject==='sci'?scienceWords(vtopics):vocabWords(vtopics,rng,lv);
+  const byT={}; vtopics.forEach(t=>byT[t]=[]);
+  const refill=t=>{ byT[t]=shuffle(all.filter(w=>w.topic===t),rng); };
+  vtopics.forEach(refill);
+  let rr=Math.floor(rng()*vtopics.length);
+  const ctx={rng,all,lv,mode,topics:vtopics,
+    pick(n,filter=()=>true){
+      const out=[]; let guard=0;
+      while(out.length<n && guard++<n*40){
+        const t=vtopics[rr++%vtopics.length]; if(!byT[t].length) refill(t);
+        const i=byT[t].findIndex(w=>filter(w)&&!out.some(o=>o.en===w.en));
+        if(i<0) continue; out.push(byT[t].splice(i,1)[0]);
+      }
+      return shuffle(out,rng);
+    }};
+  const bi=$('lang').value==='enes', showScore=$('optScore').checked;
+  let body='',keyHtml='',k=0;
+  for(const {a,n} of vacts){
+    a._ins=null; a._insEs=null;
+    const r=a.gen.call(a,ctx,n); if(!r) continue; k++;
+    body+=`<section class="act"><div class="act-h"><div class="num">${k}</div><div class="ins">${a._ins||a.en}${bi?`<span class="es">${a._insEs||a.esI}</span>`:''}</div>${showScore?`<div class="score">${icon('star','ic')} ____ / ${r.pts}</div>`:''}</div>${r.body}</section>`;
+    keyHtml+=`<div class="sec"><h3>${k}. ${a.es}</h3>${r.keyHtml||`<ol>${r.key.map(x=>`<li>${x}</li>`).join('')}</ol>`}</div>`;
+  }
+  let bank='';
+  if($('optGrammar').checked && subject==='sci'){
+    const notes=vtopics.map(id=>{ const T=SCT[id]; return `<div class="pnote nb"><div class="tape"></div><h3>${esc(T.en)}</h3><div class="kw">${T.glossary.map(g=>`<div>${g[3]&&mode!=='es'?`<span class="pic">${g[3]}</span>`:''}<b>${esc(g[0])}</b>${mode!=='def'?` <span class="es-w">(${esc(g[2])})</span>`:''}: ${esc(g[1])}</div>`).join('')}</div></div>`; }).join('');
+    bank=`<div class="sect">${icon('book')}Key words</div><div class="notes">${notes}</div>`;
+  } else if($('optGrammar').checked){
+    const words=[]; const seen=new Set();
+    for(const w of all){ if(seen.has(w.en))continue; seen.add(w.en); words.push(w); }
+    const shown=words.filter(w=>!w.num).slice(0,40);
+    const numBank=vtopics.filter(t=>VT[t].gen).map(t=>{
+      const T=VT[t];
+      if(T.ord) return `<div class="pnote nb"><div class="tape"></div><h3>Ordinal numbers</h3><div class="numtab">${[1,2,3,4,5,8,9,12,20,21,22,23,30,31].map(x=>`<span><b>${ordSuffix(x)}</b> ${ordWords(x)}</span>`).join('')}</div><div class="tip">${icon('bulb')}<span><b>Tip!</b> 1st, 2nd, 3rd… then <b>-th</b>: fourth, fifth, twelfth, twentieth</span></div></div>`;
+      if(t==='num20') return `<div class="pnote nb"><div class="tape"></div><h3>Numbers 1–20</h3><div class="numtab">${Array.from({length:20},(_,i)=>`<span><b>${i+1}</b> ${numWords(i+1)}</span>`).join('')}</div></div>`;
+      if(t==='num100') return `<div class="pnote nb"><div class="tape"></div><h3>Numbers to 100</h3><div class="numtab">${[20,30,40,50,60,70,80,90,100].map(x=>`<span><b>${x}</b> ${x===100?'one hundred':numWords(x)}</span>`).join('')}</div><div class="tip">${icon('bulb')}<span><b>Tip!</b> 21 = twenty<b>-</b>one · 35 = thirty<b>-</b>five · 13 thir<b>teen</b> ≠ 30 thir<b>ty</b></span></div></div>`;
+      return `<div class="pnote nb"><div class="tape"></div><h3>Big numbers</h3><div class="numtab">${[100,101,250,365,500,999,1000].map(x=>`<span><b>${x}</b> ${numWords(x)}</span>`).join('')}</div><div class="tip">${icon('bulb')}<span><b>Tip!</b> After <b>hundred</b> we say <b>and</b>: 365 = three hundred <b>and</b> sixty-five</span></div></div>`;
+    }).join('');
+    const cards=shown.length?`<div class="wbank">${shown.map(w=>`<div class="wcard">${w.pic&&mode!=='es'?`<span class="pic">${w.pic}</span>`:''}<b>${esc(w.en)}</b>${mode!=='pic'||!w.pic?`<span class="es-w">${esc(w.es)}</span>`:''}</div>`).join('')}</div>`:'';
+    bank=`<div class="sect">${icon('book')}Word bank</div>${cards}${numBank?`<div class="notes">${numBank}</div>`:''}`;
+  }
+  return assemblePages({body,keyHtml,seed,label,theory:bank});
+}
+
+/* =========================================================
+   MODES (grammar / vocabulary)
+   ========================================================= */
+const mode = () => $('mode').value;
+function setMode(m){
+  $('mode').value=m;
+  document.querySelectorAll('#modes button').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));
+  $('vocabPanel').style.display = m==='vocab'?'':'none';
+  $('sciPanel').style.display = m==='sci'?'':'none';
+  $('gramPanel').style.display = m==='gram'?'':'none';
+  $('customBox').style.display = m==='gram'?'':'none';
+  const sub=$('subtitle').value.trim();
+  if(!sub||['Grammar practice','Vocabulary practice','Science practice'].includes(sub)) $('subtitle').value = {vocab:'Vocabulary practice',sci:'Science practice'}[m]||'Grammar practice';
+  titleEdited=false;
+}
+function buildVocabUI(){
+  $('vacts').innerHTML = VACTS.map(a=>`<div class="act-row"><label class="chk"><input type="checkbox" data-key="va:${a.id}" data-vact="${a.id}" ${a.on?'checked':''}> ${a.es}</label><input type="number" min="2" max="14" value="${a.def}" data-key="vn:${a.id}" data-vn="${a.id}"></div>`).join('');
+  $('vtopics').innerHTML = VTOPICS.map(t=>`<label class="chk vt" data-lv="${t.lv[0]}-${t.lv[1]}"><input type="checkbox" value="${t.id}" data-key="vt:${t.id}" ${t.id==='wild'?'checked':''}><span class="t">${t.en}<span class="note">${t.es}${t.note?' · '+t.note:''}</span></span></label>`).join('');
+  document.querySelectorAll('#modes button').forEach(b=>b.onclick=()=>{ setMode(b.dataset.mode); render(); });
+}
+const SACT_IDS=['scloze','stf','vmatch','sclassify','vwrite','vmissing','vsearch','vcross'];
+const SACT_ON={scloze:1,stf:1,vmatch:1,sclassify:1,vcross:1};
+const SACTS=SACT_IDS.map(id=>SACTS_EXTRA.find(a=>a.id===id)||VACTS.find(a=>a.id===id));
+function buildSciUI(){
+  $('sacts').innerHTML = SACTS.map(a=>`<div class="act-row"><label class="chk"><input type="checkbox" data-key="sa:${a.id}" data-sact="${a.id}" ${SACT_ON[a.id]?'checked':''}> ${a.id==='vmatch'?'Unir palabra y definición':a.id==='vwrite'?'Leer y escribir la palabra':a.es}</label><input type="number" min="2" max="14" value="${a.id==='sclassify'?12:a.def}" data-key="sn:${a.id}" data-sn="${a.id}"></div>`).join('');
+  let last='';
+  $('stopics').innerHTML = SCTOPICS.map(t=>{ const h=t.area!==last?`<div class="note" style="margin-top:6px;font-weight:600">${t.area} Science</div>`:''; last=t.area; return h+`<label class="chk st" data-lv="${t.lv[0]}-${t.lv[1]}"><input type="checkbox" value="${t.id}" data-key="st:${t.id}" ${t.id==='animals'?'checked':''}><span class="t">${t.en}<span class="note">${t.es}</span></span></label>`; }).join('');
+}
+function renderSci(){
+  const lv=+$('sLevel').value, all=$('sAll').checked;
+  document.querySelectorAll('#stopics label').forEach(l=>{ const [a,b]=l.dataset.lv.split('-').map(Number); l.style.display = all||(lv>=a&&lv<=b)?'':'none'; });
+  const ts=[...document.querySelectorAll('#stopics label')].filter(l=>l.style.display!=='none').map(l=>l.querySelector('input')).filter(c=>c.checked).map(c=>c.value);
+  if(!titleEdited) $('title').value = ts.length ? ts.map(t=>SCT[t].en).join(ts.length>2?', ':' & ').replace(/, ([^,]*)$/,' & $1') : 'Science';
+  const acts=SACTS.filter(a=>document.querySelector(`[data-sact="${a.id}"]`).checked).map(a=>({a,n:Math.max(2,Math.min(14,+document.querySelector(`[data-sn="${a.id}"]`).value||a.def))}));
+  $('sWarn').textContent = ts.length?'':'Elige al menos una unidad.';
+  const versions=+$('versions').value, seed=+$('seed').value||1; let html='';
+  if(ts.length) for(let v=0;v<versions;v++){
+    const res=buildVocabVersion({vtopics:ts,vacts:acts,seed:seed+v*7919,label:versions>1?'Version '+'ABCD'[v]:'',lv,mode:$('sSupport').value,subject:'sci'});
+    html+=res.ws; if($('optKey').checked) html+=res.key;
+  }
+  return html;
+}
+function filterVTopics(){
+  const lv=+$('vLevel').value, all=$('vAll').checked;
+  document.querySelectorAll('#vtopics label').forEach(l=>{
+    const [a,b]=l.dataset.lv.split('-').map(Number);
+    l.style.display = all||(lv>=a&&lv<=b) ? '' : 'none';
+  });
+}
+function renderVocab(){
+  filterVTopics();
+  const lv=+$('vLevel').value;
+  const vtopics=[...document.querySelectorAll('#vtopics label')].filter(l=>l.style.display!=='none').map(l=>l.querySelector('input')).filter(c=>c.checked).map(c=>c.value);
+  if(!titleEdited) $('title').value = vtopics.length ? 'Vocabulary: '+vtopics.map((t,i)=>i?lc(VT[t].en):VT[t].en).join(vtopics.length>2?', ':' & ').replace(/, ([^,]*)$/,' & $1') : 'Vocabulary';
+  const vacts=VACTS.filter(a=>document.querySelector(`[data-vact="${a.id}"]`).checked)
+                   .map(a=>({a,n:Math.max(2,Math.min(14,+document.querySelector(`[data-vn="${a.id}"]`).value||a.def))}));
+  $('vWarn').textContent = vtopics.length? '' : 'Elige al menos un tema de vocabulario.';
+  const versions=+$('versions').value, seed=+$('seed').value||1;
+  let html='';
+  if(vtopics.length) for(let v=0;v<versions;v++){
+    const res=buildVocabVersion({vtopics,vacts,seed:seed+v*7919,label:versions>1?'Version '+'ABCD'[v]:'',lv,mode:$('vSupport').value});
+    html+=res.ws; if($('optKey').checked) html+=res.key;
+  }
+  return html;
+}
+
+/* =========================================================
+   MOBILE PREVIEW, SETTINGS, PDF
+   ========================================================= */
+function fitPreview(){
+  const w=window.innerWidth;
+  $('preview').style.setProperty('--z', w<900 ? Math.min(1,(w-16)/794).toFixed(3) : 1);
+}
+function toast(msg,ms=3500){ const t=$('toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('on'),ms); }
+
+const STORE='fichas-ingles-v1';
+const keyOf = el => el.dataset.key || el.id || (el.dataset.act?'a:'+el.dataset.act : el.dataset.n?'n:'+el.dataset.n : (el.type==='checkbox'&&(el.closest('#tenses')||el.closest('#topics')))?'t:'+el.value : null);
+function saveSettings(){
+  try{
+    const st={};
+    document.querySelectorAll('.controls input, .controls select, .controls textarea').forEach(el=>{
+      const k=keyOf(el); if(!k||k==='seed')return; st[k]=el.type==='checkbox'?el.checked:el.value;
+    });
+    st.__titleEdited=titleEdited;
+    localStorage.setItem(STORE,JSON.stringify(st));
+  }catch(e){}
+}
+function loadSettings(){
+  try{
+    const st=JSON.parse(localStorage.getItem(STORE)||'null'); if(!st)return;
+    document.querySelectorAll('.controls input, .controls select, .controls textarea').forEach(el=>{
+      const k=keyOf(el); if(!k||!(k in st))return; if(el.type==='checkbox')el.checked=st[k]; else el.value=st[k];
+    });
+    titleEdited=!!st.__titleEdited;
+  }catch(e){}
+}
+
+const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+function fileName(){ return ($('title').value||'Ficha').replace(/[\\/:*?"<>|]/g,'').trim()+' - '+$('seed').value; }
+function doPrint(){ const old=document.title; document.title=fileName(); setTimeout(()=>{ window.print(); setTimeout(()=>document.title=old,1500); },50); }
+function onPdf(){
+  if(window.self!==window.top){ toast('Abre la app desde su icono o en Safari para guardar el PDF.'); return; }
+  let skip=false; try{ skip=localStorage.getItem('pdfHelpSeen')==='1'; }catch(e){}
+  if(isIOS && !skip){ $('pdfHelp').classList.add('on'); return; }
+  doPrint();
+}
+function initPdfHelp(){
+  $('pdfGo').onclick=()=>{ if($('pdfNoMore').checked){ try{localStorage.setItem('pdfHelpSeen','1');}catch(e){} } $('pdfHelp').classList.remove('on'); doPrint(); };
+  $('pdfCancel').onclick=()=>$('pdfHelp').classList.remove('on');
+}
+
+/* offline + home-screen app */
+if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')){
+  window.addEventListener('load',()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+}
+
+buildVocabUI(); buildSciUI();
+loadSettings();
+setMode($('mode').value||'gram');
+try{ titleEdited=!!JSON.parse(localStorage.getItem(STORE)||'{}').__titleEdited; }catch(e){}
+document.querySelectorAll('#vocabPanel input, #vocabPanel select, #sciPanel input, #sciPanel select').forEach(el=>el.addEventListener('change',render));
+initPdfHelp(); fitPreview(); render();
+
+</script>
+</body>
+</html>
